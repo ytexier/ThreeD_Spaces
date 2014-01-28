@@ -12,10 +12,11 @@
   <script src="assets/lib/three.min.js"></script>
   <script src="assets/js/controls/OrbitControls.js"></script>
   <script src="assets/js/libs/stats.min.js"></script>
+  <script src="assets/js/Detector.js"></script>
 
   <script type="text/javascript">
 	
-	//if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+	if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
 	createScene();
 
