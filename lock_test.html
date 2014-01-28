@@ -59,10 +59,10 @@
         </head>
         <body>
                 <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
-				<script type="text/javascript" src="assets/lib/three.min.js"></script>
-				<script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
-				<script type="text/javascript" src="assets/lib/js/controls/FirstPersonControls.js"></script>
-				<script type="text/javascript" src="assets/lib/js/controls/PointerLockControls.js"></script>
+                                <script type="text/javascript" src="assets/lib/three.min.js"></script>
+                                <script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
+                                <script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
+                                <script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
 
                 <div id="blocker">
 
@@ -177,6 +177,73 @@
                         init();
                         animate();
 
+                        /**
+       * Permet d'ajouter à a scène un effet de ciel.
+       * @return {}
+       */
+      function sky(){
+
+              // Chargements des textures dans urls
+              var path = "assets/textures/skybox/water/";
+              var format = '.jpg';
+              var urls = [
+                      path + 'px' + format, path + 'nx' + format,
+                      path + 'py' + format, path + 'ny' + format,
+                      path + 'pz' + format, path + 'nz' + format
+              ];
+
+              // on charge les textures avec urls
+              var cubemap = THREE.ImageUtils.loadTextureCube(urls);
+              cubemap.format = THREE.RGBFormat;
+
+              // on initialise le Shader
+              var shader = THREE.ShaderLib['cube'];
+
+              // on applique les textures au Shader
+              shader.uniforms['tCube'].value = cubemap;
+
+              // creation d'un Shader material
+              var skyBoxMaterial = new THREE.ShaderMaterial( {
+                fragmentShader: shader.fragmentShader,
+                vertexShader: shader.vertexShader,
+                uniforms: shader.uniforms,
+                depthWrite: false,
+                side: THREE.BackSide
+              });
+
+              // xreation du skybox mesh
+              var skybox = new THREE.Mesh(
+                new THREE.CubeGeometry(1000, 1000, 1000),
+                skyBoxMaterial
+              );
+
+              // on ajoute le skybox à la scène
+              scene.add(skybox);
+      }
+
+      /**
+       * Permet d'ajouter à la scène un sol texturé
+       * @return {}
+       */
+      function plane(){
+
+              // Chargement de la texture dans le material
+              var texturePlane = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
+              var materialPlane = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texturePlane } );
+
+              // create du mesh avec le materialPlane
+              var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300, 10, 10), materialPlane);
+
+              // rotation du sol pour qu'il soit a l'horizontale
+              plane.rotation.x = -Math.PI / 2;
+              plane.position.y = -20;
+              plane.receiveShadow = true;
+
+              // ajout du sol a la scène
+              scene.add(plane);
+      }
+
+
                         function init() {
 
                                 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -198,72 +265,14 @@
                                 ray = new THREE.Raycaster();
                                 ray.ray.direction.set( 0, -1, 0 );
 
-                                // floor
-
-                                geometry = new THREE.PlaneGeometry( 2000, 2000, 100, 100 );
-                                geometry.applyMatrix( new THREE.Matrix4().makeRotationX( - Math.PI / 2 ) );
-
-                                for ( var i = 0, l = geometry.vertices.length; i < l; i ++ ) {
-
-                                        var vertex = geometry.vertices[ i ];
-                                        vertex.x += Math.random() * 20 - 10;
-                                        vertex.y += Math.random() * 2;
-                                        vertex.z += Math.random() * 20 - 10;
-
-                                }
-
-                                for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-                                        var face = geometry.faces[ i ];
-                                        face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                                        face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                                        face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-                                }
-
-                                material = new THREE.MeshBasicMaterial( { vertexColors: THREE.VertexColors } );
-
-                                mesh = new THREE.Mesh( geometry, material );
-                                scene.add( mesh );
-
-                                // objects
-
-                                geometry = new THREE.CubeGeometry( 20, 20, 20 );
-
-                                for ( var i = 0, l = geometry.faces.length; i < l; i ++ ) {
-
-                                        var face = geometry.faces[ i ];
-                                        face.vertexColors[ 0 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                                        face.vertexColors[ 1 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-                                        face.vertexColors[ 2 ] = new THREE.Color().setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-                                }
-
-                                for ( var i = 0; i < 500; i ++ ) {
-
-                                        material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
-
-                                        var mesh = new THREE.Mesh( geometry, material );
-                                        mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
-                                        mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
-                                        scene.add( mesh );
-
-                                        material.color.setHSL( Math.random() * 0.2 + 0.5, 0.75, Math.random() * 0.25 + 0.75 );
-
-                                        objects.push( mesh );
-
-                                }
-
-                                //
+                                sky();
+                                plane();
 
                                 renderer = new THREE.WebGLRenderer();
                                 renderer.setClearColor( 0xffffff );
                                 renderer.setSize( window.innerWidth, window.innerHeight );
 
                                 document.body.appendChild( renderer.domElement );
-
-                                //
 
                                 window.addEventListener( 'resize', onWindowResize, false );
 
@@ -281,8 +290,6 @@
                         function animate() {
 
                                 requestAnimationFrame( animate );
-
-                                //
 
                                 controls.isOnObject( false );
 
