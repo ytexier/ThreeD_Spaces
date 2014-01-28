@@ -22,6 +22,8 @@
 
 	var container, stats;
 	var camera, controls, scene, renderer, mesh;
+	var floor, spotlight, pLightOne;
+
 
 	var mouseX = 0, mouseY = 0;
 	var SCREEN_WIDTH = window.innerWidth;
@@ -38,8 +40,9 @@
 	function createScene() {
 	  	init();
 		sky();
-		plane();
+		floor();
 		cube();
+		spotLight();
 		animate();
 	}
 
@@ -79,6 +82,8 @@
 	    //document.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 	    window.addEventListener( 'resize', onWindowResize, false );
+
+
 
 	}
 
@@ -130,22 +135,26 @@
 	 * Permet d'ajouter à la scène un sol texturé
 	 * @return {}
 	 */
-	function plane(){
+	function floor(){
 
 		// Chargement de la texture dans le material
-		var texturePlane = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
-		var materialPlane = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texturePlane } );
+		var floorTexture = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
+		floorTexture.wrapS = floorTexture.wrapT = THREE.RepeatWrapping;
+		floorTexture.repeat.set( 10, 10 );
+		var floorMaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, map: floorTexture } );
 
-		// create du mesh avec le materialPlane
-		var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300, 10, 10), materialPlane);
+		// create du mesh avec le floorMaterial
+		floor = new THREE.Mesh(new THREE.PlaneGeometry(300, 300), floorMaterial);
 
 		// rotation du sol pour qu'il soit a l'horizontale
-		plane.rotation.x = -Math.PI / 2;
-		plane.position.y = -20;
-		plane.receiveShadow = true;
+		floor.rotation.x = -Math.PI / 2;
+		floor.position.y = -20;
 
 		// ajout du sol a la scène
-		scene.add(plane);
+		scene.add(floor);
+
+		// pour avoir l'effet d'ombre
+		floor.receiveShadow = true;
 	}
 
 	/**
@@ -156,23 +165,37 @@
 		// Chargement de la texture dans le material
 		var textureCube = new THREE.ImageUtils.loadTexture('assets/textures/floor/classic_wood.jpg');
 		var materialCube = new THREE.MeshBasicMaterial( { color: 0xffffff, map: textureCube } );
-		var cube = new THREE.Mesh(new THREE.CubeGeometry(20, 20, 20), materialCube);
+		var cube = new THREE.Mesh(new THREE.CubeGeometry(40, 40, 40), materialCube);
 		cube.overdraw = true;
 		scene.add(cube);
 	}
 
-	/**
-	 * Permet d'ajouter à la scène un cube texturé
-	 * @return {}
-	 */
-	function cube(){
-		// Chargement de la texture dans le material
-		var textureCube = new THREE.ImageUtils.loadTexture('assets/textures/floor/classic_wood.jpg');
-		var materialCube = new THREE.MeshBasicMaterial( { color: 0xffffff, map: textureCube } );
-		var cube = new THREE.Mesh(new THREE.CubeGeometry(20, 20, 20), materialCube);
-		cube.overdraw = true;
-		scene.add(cube);
+	function spotLight(){
+
+	    spotlight = new THREE.SpotLight(0xff0000);
+		pLightOne = spotlight;
+		spotlight.position.set(30, 50, -100);
+		spotlight.shadowCameraVisible = true;
+		spotlight.shadowDarkness = 0.25;
+		spotlight.intensity = 15;
+		spotlight.shadowCameraFov = 100;
+
+		// must enable shadow casting ability for the light
+		spotlight.castShadow = true;
+		scene.add(spotlight);
+
+		// Ajout de la spère pour avoir le visuel de la lumière
+		var sphereGeometry = new THREE.SphereGeometry( 10, 16, 8 );
+		var darkMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+		var wireframeMaterial = new THREE.MeshBasicMaterial(
+		{ color: 0xff0000, wireframe: true, transparent: false } );
+		var shape = THREE.SceneUtils.createMultiMaterialObject(
+		sphereGeometry, [ darkMaterial, wireframeMaterial ] );
+		shape.position = spotlight.position;
+		scene.add( shape );
+
 	}
+
 
 	/**
 	 * Appel récursif sur elle même à chaque frame.
