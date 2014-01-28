@@ -39,6 +39,7 @@
 	  	init();
 		sky();
 		plane();
+		cube();
 		animate();
 	}
 
@@ -145,6 +146,32 @@
 
 		// ajout du sol a la scène
 		scene.add(plane);
+	}
+
+	/**
+	 * Permet d'ajouter à la scène un cube texturé
+	 * @return {}
+	 */
+	function cube(){
+		// Chargement de la texture dans le material
+		var textureCube = new THREE.ImageUtils.loadTexture('assets/textures/floor/classic_wood.jpg');
+		var materialCube = new THREE.MeshBasicMaterial( { color: 0xffffff, map: textureCube } );
+		var cube = new THREE.Mesh(new THREE.CubeGeometry(20, 20, 20), materialCube);
+		cube.overdraw = true;
+		scene.add(cube);
+	}
+
+	/**
+	 * Permet d'ajouter à la scène un cube texturé
+	 * @return {}
+	 */
+	function cube(){
+		// Chargement de la texture dans le material
+		var textureCube = new THREE.ImageUtils.loadTexture('assets/textures/floor/classic_wood.jpg');
+		var materialCube = new THREE.MeshBasicMaterial( { color: 0xffffff, map: textureCube } );
+		var cube = new THREE.Mesh(new THREE.CubeGeometry(20, 20, 20), materialCube);
+		cube.overdraw = true;
+		scene.add(cube);
 	}
 
 	/**
