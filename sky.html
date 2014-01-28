@@ -37,7 +37,7 @@
 	function createScene() {
 	  	init();
 		sky();
-		//floor();
+		plane();
 		animate();
 	}
 
@@ -128,7 +128,22 @@
 	 * Permet d'ajouter à la scène un sol texturé
 	 * @return {}
 	 */
-	function floor(){
+	function plane(){
+
+		// Chargement de la texture dans le material
+		var texturePlane = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
+		var materialPlane = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texturePlane } );
+
+		// create du mesh avec le materialPlane
+		var plane = new THREE.Mesh(new THREE.PlaneGeometry(300, 300, 10, 10), materialPlane);
+
+		// rotation du sol pour qu'il soit a l'horizontale
+		plane.rotation.x = -Math.PI / 2;
+		plane.position.y = -20;
+		plane.receiveShadow = true;
+
+		// ajout du sol a la scène
+		scene.add(plane);
 	}
 
 	/**
