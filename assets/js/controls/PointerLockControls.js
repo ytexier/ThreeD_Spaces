@@ -21,7 +21,12 @@ THREE.PointerLockControls = function ( camera ) {
 	var moveRight = false;
 
 	var isOnObject = false;
+	var isAgainstWall = false;
 	var canJump = false;
+	var canGoForward = true;
+	var canGoBack = true;
+	var canGoLeft = true;
+	var canGoRight = true;
 
 	var velocity = new THREE.Vector3();
 
@@ -119,6 +124,10 @@ THREE.PointerLockControls = function ( camera ) {
 		canJump = boolean;
 
 	};
+
+	this.isAgainstWall = function ( boolean ) {
+		isAgainstWall = boolean;
+	}
 
 	this.getDirection = function() {
 
