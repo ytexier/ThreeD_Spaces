@@ -203,8 +203,8 @@
         /**
         * Ajouter le ciel, le sol et les objets
         */
-        make_skybox();
-        make_floor();
+        make_skybox('assets/textures/skybox/water/');
+        make_floor('assets/textures/floor/white_wood.jpg');
         init_light();
 
         //Test, ajout de deux spotLight
@@ -302,10 +302,10 @@
                        * Permet d'ajouter à a scène un effet de ciel.
                        * @return {} THREE
                        */
-                      function make_skybox(){
+                      function make_skybox(path){
 
                         // Chargements des textures dans urls
-                        var path = "assets/textures/skybox/water/";
+                        var path = path;
                         //var path = "assets/textures/skybox/vasa/";
                         var format = '.jpg';
                         var urls = [
@@ -347,9 +347,9 @@
                        * Permet d'ajouter à la scène un sol texturé
                        * @return {} THREE
                        */
-                      function make_floor(){
+                      function make_floor(texture){
                               // Chargement de la texture dans le material
-                              var texture = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
+                              var texture = new THREE.ImageUtils.loadTexture(texture);
                               var material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texture } );
                               floor = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10, 10), material);
                               // rotation du sol pour qu'il soit a l'horizontale
