@@ -2,7 +2,7 @@
 <html>
         <head>
                 <meta charset="utf-8">
-                <title>three.js - pointerlock controls</title>
+                <title>three.js</title>
                 <style>
                         html, body {
                                 width: 100%;
@@ -70,13 +70,16 @@
                         <div id="instructions">
                                 <span style="font-size:40px">Click to play</span>
                                 <br />
-                                (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+                                (Z, Q, S, D = Move, SPACE = Jump, MOUSE = Look around)
                         </div>
 
                 </div>
 
                 <script>
 
+                        /**
+                         * Déclaration des variables.
+                         */
                         var camera, scene, renderer;
                         var geometry, material, mesh;
                         var controls,time = Date.now();
@@ -88,8 +91,11 @@
                         var blocker = document.getElementById( 'blocker' );
                         var instructions = document.getElementById( 'instructions' );
 
-                        // http://www.html5rocks.com/en/tutorials/pointerlock/intro/
-
+ /** 
+  * http://www.html5rocks.com/en/tutorials/pointerlock/intro/
+  * Vérifie que le navigateur supporte le pointer lock.
+  * Lock le pointer si supporté.
+  */
                         var havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
                         if ( havePointerLock ) {
@@ -178,15 +184,15 @@
                         init();
                         animate();
 
-                        /**
+       /**
        * Permet d'ajouter à a scène un effet de ciel.
        * @return {}
        */
       function sky(){
 
               // Chargements des textures dans urls
-              //var path = "assets/textures/skybox/water/";
-              var path = "assets/textures/skybox/vasa/";
+              var path = "assets/textures/skybox/water/";
+              //var path = "assets/textures/skybox/vasa/";
               var format = '.jpg';
               var urls = [
                       path + 'px' + format, path + 'nx' + format,
@@ -230,7 +236,7 @@
       function plane(){
 
               // Chargement de la texture dans le material
-              var texturePlane = new THREE.ImageUtils.loadTexture('assets/textures/floor/white_wood.jpg');
+              var texturePlane = new THREE.ImageUtils.loadTexture('assets/textures/floor/classic_wood.jpg');
               var materialPlane = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texturePlane } );
 
               // create du mesh avec le materialPlane
@@ -247,6 +253,7 @@
 
       /**
        * Permet d'ajouter des objets à la scène
+       * Ajoute 500 cubes de taille 20*20*20.
        */
       function add_objects() {
       	var geometry = new THREE.CubeGeometry( 20, 20, 20 );
@@ -277,7 +284,12 @@
                                 }
       }
 
-
+/**
+ * Initialise le sol, le plafond, les objets.
+ * Initialise la lumière, la scene, le raycasting.
+ * Attache le rendu au document.
+ * @return {[type]} [description]
+ */
                         function init() {
 
                                 camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
@@ -301,11 +313,11 @@
 
 
 								/**
-								 * Ajouter le ciel, le sol et les objets
+								 * Ajouter le ciel, le sol et les objets.
 								 */
                                 sky();
                                 plane();
-                                //add_objects();
+                                add_objects();
 
                                 renderer = new THREE.WebGLRenderer();
                                 renderer.setClearColor( 0xffffff );
@@ -316,7 +328,10 @@
                                 window.addEventListener( 'resize', onWindowResize, false );
 
                         }
-
+/**
+ * Ecouteur sur le redimentionnement de la fenetre.
+ * @return {[type]} [description]
+ */
                         function onWindowResize() {
 
                                 camera.aspect = window.innerWidth / window.innerHeight;
@@ -325,12 +340,18 @@
                                 renderer.setSize( window.innerWidth, window.innerHeight );
 
                         }
-
+/**
+ * Fonction appelée à chaque frame de l'éxécution.
+ * Refresh le rendu en temps réél.
+ * Gère les itéractions entre la caméra et les objects (collisions)
+ * @return {[type]} [description]
+ */
                         function animate() {
 
                                 requestAnimationFrame( animate );
 
                                 controls.isOnObject( false );
+                                controls.isAgainstWall( false );
 
                                 ray.ray.origin.copy( controls.getObject().position );
                                 ray.ray.origin.y -= 10;
@@ -344,7 +365,7 @@
                                         if ( distance > 0 && distance < 10 ) {
 
                                                 controls.isOnObject( true );
-
+                                                controls.isAgainstWall( true , 'forward' );
                                         }
 
                                 }

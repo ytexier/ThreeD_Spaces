@@ -70,7 +70,7 @@ THREE.PointerLockControls = function ( camera ) {
 				break;
 
 			case 32: // space
-				if ( canJump === true ) velocity.y += 10;
+				if ( canJump === true ) velocity.y += 5;
 				canJump = false;
 				break;
 
@@ -125,8 +125,13 @@ THREE.PointerLockControls = function ( camera ) {
 
 	};
 
-	this.isAgainstWall = function ( boolean ) {
+	this.isAgainstWall = function ( boolean , direction ) {
 		isAgainstWall = boolean;
+		switch( direction ) {
+			case 'forward':
+				canGoForward = !boolean;
+				break;
+		}
 	}
 
 	this.getDirection = function() {
@@ -181,7 +186,7 @@ THREE.PointerLockControls = function ( camera ) {
 			yawObject.position.y = 10;
 
 			canJump = true;
-
+			
 		}
 
 	};
