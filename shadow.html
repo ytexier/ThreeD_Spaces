@@ -64,7 +64,8 @@
                                 <script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
                                 <script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
                                 <script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
-
+                                <script type="text/javascript" src="assets/js/Detector.js"></script>
+                                <script type="text/javascript" src="assets/js/loaders/ColladaLoader.js"></script>
                 <div id="blocker">
 
                         <div id="instructions">
@@ -76,9 +77,11 @@
                 </div>
 
                 <script>
+                        if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
 
                         var camera, scene, renderer;
                         var floor;
+                        var cubemap; //skybox
 
                         var geometry, material, mesh;
                         var controls,time = Date.now();
@@ -214,10 +217,25 @@
         add_sphere(-200,50,100);
         
         //Ajout de quatre cube à différent endroit pour voir l'ombrage
-        add_cube(10,100,10, 100,0,100, 'assets/textures/floor/classic_wood.jpg')
-        add_cube(40,50,40, -100,0,100, 'assets/textures/floor/classic_wood.jpg')
-        add_cube(100,20,30, 100,0,-100, 'assets/textures/floor/dark_wood.jpg')
-        add_cube(100,20,30, -30,10,-100, 'assets/textures/floor/dark_wood.jpg')
+        add_cube(10,100,10, 100,0,100, 'assets/textures/floor/classic_wood.jpg');
+        add_cube(40,50,40, -100,0,100, 'assets/textures/floor/classic_wood.jpg');
+        add_cube(100,20,30, 100,0,-100, 'assets/textures/floor/dark_wood.jpg');
+        add_cube(100,20,30, -30,10,-100, 'assets/textures/floor/dark_wood.jpg');
+
+        var loader = new THREE.ColladaLoader();
+        loader.load('assets/models/sculpture/models/model.dae', function (collada) {
+          var localObject = collada.scene;
+
+          localObject.scale.x = localObject.scale.y = localObject.scale.z = 20;
+          localObject.updateMatrix();
+
+          localObject.rotation.x = -Math.PI / 2;
+          localObject.position.y = -20;
+          localObject.receiveShadow = true;// pour que le floor affiche l'ombre
+
+          scene.add(localObject);
+        });
+
      }
 
                         /**
@@ -296,8 +314,7 @@
                           scene.add( shape );
                         }
 
-
-
+           
                        /**
                        * Permet d'ajouter à a scène un effet de ciel.
                        * @return {} THREE
@@ -315,7 +332,7 @@
                         ];
 
                         // on charge les textures avec urls
-                        var cubemap = THREE.ImageUtils.loadTextureCube(urls);
+                        cubemap = THREE.ImageUtils.loadTextureCube(urls);
                         cubemap.format = THREE.RGBFormat;
 
                         // on initialise le Shader
