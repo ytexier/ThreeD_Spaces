@@ -3,8 +3,8 @@
 <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
 <script type="text/javascript" src="assets/lib/three.min.js"></script>
 <script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
-<script type="text/javascript" src="assets/lib/js/controls/FirstPersonControls.js"></script>
-<script type="text/javascript" src="assets/lib/js/controls/PointerLockControls.js"></script>
+<script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
+<script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
 
 </head>
 <body>
@@ -48,6 +48,7 @@ function fps() {
 	controls.lookSpeed = 0.05;
 	controls.noFly = true;
 	controls.lookVertical = false;
+	scene.add(controls);
 
 }
 
@@ -75,7 +76,7 @@ function render() {
 	requestAnimationFrame(render);
 	//cube.rotation.x += 0.1;
 	//cube.rotation.z += 0.1;
-	//controls.update(clock.getDelta());
+	controls.update(clock.getDelta());
 	renderer.render(scene, camera);
 }
 
@@ -84,7 +85,7 @@ function animate() {
 	controls.isOnObject(false);
 }
 
-pointer_test();
+//pointer_test();
 fps();
 render();
 

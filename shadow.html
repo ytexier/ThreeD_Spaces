@@ -61,8 +61,7 @@
 
                 <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
                                 <script type="text/javascript" src="assets/lib/three.min.js"></script>
-                                <script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
-                                <script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
+                                <script type="text/javascript" src="assets/lib/physi.js"></script>
                                 <script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
 
                 <div id="blocker">
@@ -70,7 +69,7 @@
                         <div id="instructions">
                                 <span style="font-size:40px">Click to play</span>
                                 <br />
-                                (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+                                (Z, S, Q, D = Move, SPACE = Jump, MOUSE = Look around)
                         </div>
 
                 </div>
@@ -214,10 +213,15 @@
         add_sphere(-200,50,100);
         
         //Ajout de quatre cube à différent endroit pour voir l'ombrage
-        add_cube(10,100,10, 100,0,100, 'assets/textures/floor/classic_wood.jpg')
-        add_cube(40,50,40, -100,0,100, 'assets/textures/floor/classic_wood.jpg')
-        add_cube(100,20,30, 100,0,-100, 'assets/textures/floor/dark_wood.jpg')
-        add_cube(100,20,30, -30,10,-100, 'assets/textures/floor/dark_wood.jpg')
+        add_cube(10,100,10, 100,0,100, 0, 'assets/textures/floor/classic_wood.jpg');
+        add_cube(40,50,40, -100,0,100, 0, 'assets/textures/floor/classic_wood.jpg');
+        add_cube(100,20,30, 100,0,-100, 0, 'assets/textures/floor/dark_wood.jpg');
+        add_cube(100,20,30, -30,10,-100, 0, 'assets/textures/floor/dark_wood.jpg');
+
+        add_cube(1000, 100, 20, 0, 0, 500, 0, 'assets/textures/floor/dark_wood.jpg');
+        add_cube(1000, 100, 20, 0, 0, -500, 0, 'assets/textures/floor/dark_wood.jpg');
+        add_cube(1000, 100, 20, -500, 0, 0, 1.57, 'assets/textures/floor/dark_wood.jpg');
+        add_cube(1000, 100, 20, 500, 0, 0, 1.57, 'assets/textures/floor/dark_wood.jpg');
      }
 
                         /**
@@ -261,10 +265,11 @@
                          * @param {int,float} x      position
                          * @param {int,float} y      position
                          * @param {int,float} z      position
+                         * @param {int,float} angle  rotation par rapport à y
                          * @param {string} texture texture appliqué au material
                          * @return {}   THREE
                          */
-                        function add_cube(width, height, depth, x, y, z, texture){
+                        function add_cube(width, height, depth, x, y, z, angle, texture){
                           var textureCube = new THREE.ImageUtils.loadTexture(texture);
                           var materialCube = new THREE.MeshBasicMaterial( { color: 0xffffff, map: textureCube } );
                           var cube = new THREE.Mesh(new THREE.CubeGeometry(width, height, depth), materialCube);
@@ -272,8 +277,10 @@
                           cube.position.x = x;
                           cube.position.y = y;
                           cube.position.z = z;
+                          cube.rotation.y = angle;
                           cube.castShadow = true;// effet d'ombre casté par le cube
                           scene.add(cube);
+                          objects.push(cube);
                         }
 
                         /**

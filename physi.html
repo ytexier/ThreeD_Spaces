@@ -59,11 +59,10 @@
 </head>
 <body>
 
-  <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
   <script type="text/javascript" src="assets/lib/three.min.js"></script>
-  <script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
-  <script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
+  <script type="text/javascript" src="assets/lib/physi.js"></script>
   <script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
+  <script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
 
   <div id="blocker">
 
@@ -75,28 +74,129 @@
 
   </div>
 
-  <script>  
+  <script>
+  /**
+   * Physi.js initialization
+   */
+  
+  'use strict';
 
+  Physijs.scripts.worker = 'assets/lib/physijs_worker.js';
+  Physijs.scripts.ammo = 'ammo.js';
 
-    /**
-    * Déclaration des variables.
-    */
-    var camera, scene, renderer;
-    var geometry, material, mesh;
-    var controls,time = Date.now();
+  var initScene, renderer, render, scene, camera, box, controls, material;
+  var time = Date.now();
+  var objects = [];
+  var camera_mesh;
 
-    var objects = [];
+  pointer_lock_check();
 
-    var ray;
+  initScene = function() {
+    renderer = new THREE.WebGLRenderer({antialias: true});
+    renderer.setClearColor( 0xffffff );
+    renderer.setSize( window.innerWidth, window.innerHeight );
 
-    var blocker = document.getElementById( 'blocker' );
-    var instructions = document.getElementById( 'instructions' );
+    document.body.appendChild( renderer.domElement );
 
+    window.addEventListener( 'resize', onWindowResize, false );
+    
+    scene = new Physijs.Scene;
+    scene.setGravity(new THREE.Vector3( 0, -30, 0 ));
+    
+    
+    camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 1, 1000 );
+    //scene.add( camera );
 
+    
 
-    pointer_lock_check();
-    init();
+    camera_mesh = new Physijs.BoxMesh(
+      new THREE.CubeGeometry( 1, 1, 1 ),
+      new THREE.MeshBasicMaterial({ color: 0x888888 }),
+      0
+      );
+    
+    controls = new THREE.PointerLockControls(camera);
+
+    camera_mesh.add(controls.getObject());
+    scene.add(camera_mesh);
+    //scene.add( controls.getObject() );
+    
+    sky();
+    plane();
+    //add_objects();
+    
+    // Box
+    box = new Physijs.BoxMesh(
+      new THREE.CubeGeometry( 20, 20, 20 ),
+      new THREE.MeshBasicMaterial({ color: 0x888888 }),
+      0
+    );
+    box.addEventListener( 'collision' , function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+    // `this` has collided with `other_object` with an impact speed of `relative_velocity` and a rotational force of `relative_rotation` and at normal `contact_normal`
+      this.material.color.setHex(0xffffff);
+
+      });
+    scene.add( box );
     animate();
+    //requestAnimationFrame( render );
+  };
+  
+render = function() {
+    scene.simulate(); // run physics
+    controls.update( Date.now() - time );
+
+    renderer.render( scene, camera); // render the scene
+    time = Date.now();
+    requestAnimationFrame( render );
+  };
+  
+  window.onload = initScene;
+  //animate();
+
+/**
+* Fonction appelée à chaque frame de l'éxécution.
+* Refresh le rendu en temps réél.
+* Gère les itéractions entre la caméra et les objects (collisions)
+* @return {[type]} [description]
+*/
+function animate() {
+
+  scene.simulate( undefined, 1 );
+  requestAnimationFrame( animate );
+
+  controls.isOnObject( false );
+/*
+  ray.ray.origin.copy( controls.getObject().position );
+  ray.ray.origin.y -= 10;
+
+  var intersections = ray.intersectObjects( objects );
+
+  if ( intersections.length > 0 ) {
+
+    var distance = intersections[ 0 ].distance;
+
+    if ( distance > 0 && distance < 10 ) {
+
+      controls.isOnObject( true );
+    }
+
+  }
+*/
+  controls.update( Date.now() - time );
+  //camera_mesh.position.x = (controls.getObject().x);
+
+  renderer.render( scene, camera );
+
+  time = Date.now();
+
+}
+   
+
+
+
+    //pointer_lock_check();
+    //init();
+    //animate();
 
     /**
     * Permet d'ajouter à a scène un effet de ciel.
@@ -134,11 +234,12 @@
       });
 
       // creation du skybox mesh
-      var skybox = new THREE.Mesh(
+      var skybox = new Physijs.BoxMesh(
         new THREE.CubeGeometry(1000, 1000, 1000),
-        skyBoxMaterial
+        skyBoxMaterial,
+        0
         );
-
+      skybox.collisions = 0;
       // on ajoute le skybox à la scène
       scene.add(skybox);
     }
@@ -154,13 +255,12 @@
       var materialPlane = new THREE.MeshBasicMaterial( { color: 0xffffff, map: texturePlane } );
 
       // create du mesh avec le materialPlane
-      var plane = new THREE.Mesh(new THREE.PlaneGeometry(1000, 1000, 10, 10), materialPlane);
+      var plane = new Physijs.PlaneMesh(new THREE.PlaneGeometry(1100, 1100, 10, 10), materialPlane, 0);
 
       // rotation du sol pour qu'il soit a l'horizontale
       plane.rotation.x = -Math.PI / 2;
       plane.position.y = -20;
       plane.receiveShadow = true;
-
       // ajout du sol a la scène
       scene.add(plane);
     }
@@ -185,7 +285,7 @@
 
         material = new THREE.MeshPhongMaterial( { specular: 0xffffff, shading: THREE.FlatShading, vertexColors: THREE.VertexColors } );
 
-        var mesh = new THREE.Mesh( geometry, material );
+        var mesh = new Physijs.BoxMesh( geometry, material );
         mesh.position.x = Math.floor( Math.random() * 20 - 10 ) * 20;
         mesh.position.y = Math.floor( Math.random() * 20 ) * 20 + 10;
         mesh.position.z = Math.floor( Math.random() * 20 - 10 ) * 20;
@@ -254,43 +354,7 @@ function onWindowResize() {
   renderer.setSize( window.innerWidth, window.innerHeight );
 
 }
-/**
-* Fonction appelée à chaque frame de l'éxécution.
-* Refresh le rendu en temps réél.
-* Gère les itéractions entre la caméra et les objects (collisions)
-* @return {[type]} [description]
-*/
-function animate() {
 
-  requestAnimationFrame( animate );
-
-  controls.isOnObject( false );
-  controls.isAgainstWall( false );
-
-  ray.ray.origin.copy( controls.getObject().position );
-  ray.ray.origin.y -= 10;
-
-  var intersections = ray.intersectObjects( objects );
-
-  if ( intersections.length > 0 ) {
-
-    var distance = intersections[ 0 ].distance;
-
-    if ( distance > 0 && distance < 10 ) {
-
-      controls.isOnObject( true );
-      controls.isAgainstWall( true , 'forward' );
-    }
-
-  }
-
-  controls.update( Date.now() - time );
-
-  renderer.render( scene, camera );
-
-  time = Date.now();
-
-}
 
 /** 
 * http://www.html5rocks.com/en/tutorials/pointerlock/intro/
