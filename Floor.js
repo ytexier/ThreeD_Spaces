@@ -1,0 +1,3 @@
+ThreeDSpaces.Floor = function() {
+	
+}
