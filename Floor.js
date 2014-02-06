@@ -1,3 +1,0 @@
-ThreeDSpaces.Floor = function() {
-	
-}

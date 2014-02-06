@@ -1,0 +1,58 @@
+{
+	floor: [
+		/**
+		 * [walls description]
+		 * @type {Array}
+		 */
+		walls: [
+			{
+				width: "",
+				height: "",
+				depth: "",
+				posX: "",
+				posZ: "",
+				angle: "",
+				texture: "",
+				doors: [
+					{
+						width: "",
+						height: "",
+						posX: "",
+						posZ: ""
+					}
+				],
+				windows: [
+					{
+						width: "",
+						height: "",
+						posX: "",
+						posY: ""
+						posZ: ""
+					}
+				],
+				paintings: [
+					{
+						/**
+						 * Soit model: ""
+						 * Soit width: "", height: "", texture: ""
+						 */
+						posX: "",
+						posY: "",
+						posZ: ""
+					}
+				]
+			}
+		]
+		/**
+		 * [objects = Sculptures]
+		 * @type {Array}
+		 */
+		objects: [
+			{
+				posX: "",
+				posZ: "",
+				model: ""
+			}
+		]
+	]
+}
