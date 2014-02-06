@@ -3,7 +3,7 @@
  * @param {[type]} data [description]
  */
 ThreeDSpaces.Wall = function (data) {
-	if(data == undefined)
+	if(data === undefined)
 		return;
 
 	var _object;

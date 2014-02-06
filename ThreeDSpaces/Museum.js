@@ -1,11 +1,13 @@
 ThreeDSpaces.Museum = function(data) {
 
+	if(data === undefined)
+		return;
+
+	var rawFloors = data.floors;
 	var floors = [];
 
 	this.generate = function() {
-		if(data === undefined)
-			return;
-		for(floor in data.floors) {
+		for(floor in rawFloors) {
 			floors.push(new ThreeDSpaces.Floor(floor));
 		}
 	}
