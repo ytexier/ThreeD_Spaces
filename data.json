@@ -1,58 +1,62 @@
 {
-	floor: [
-		/**
-		 * [walls description]
-		 * @type {Array}
-		 */
-		walls: [
+	"name": "Museum Test",
+	"floors": [
+		{	"r" : 0,
+			"walls": [
 			{
-				width: "",
-				height: "",
-				depth: "",
-				posX: "",
-				posZ: "",
-				angle: "",
-				texture: "",
-				doors: [
+				"width": 500,
+				"height": 100,
+				"depth": 20,
+				"posX": 0,
+				"posZ": 250,
+				"angle": 0,
+				"texture": "assets/textures/floor/dark_wood.jpg",
+				"doors": [
 					{
-						width: "",
-						height: "",
-						posX: "",
-						posZ: ""
+						"width": 30,
+						"height": 60,
+						"posX": 0,
+						"posZ": 250
 					}
 				],
-				windows: [
+				"windows": [
 					{
-						width: "",
-						height: "",
-						posX: "",
-						posY: ""
-						posZ: ""
+						"width": 0,
+						"height": 0,
+						"posX": 0,
+						"posY": 0,
+						"posZ": 0
 					}
 				],
-				paintings: [
+				"paintings": [
 					{
-						/**
-						 * Soit model: ""
-						 * Soit width: "", height: "", texture: ""
-						 */
-						posX: "",
-						posY: "",
-						posZ: ""
+						"posX": 0,
+						"posY": 0,
+						"posZ": 0
 					}
 				]
-			}
-		]
-		/**
-		 * [objects = Sculptures]
-		 * @type {Array}
-		 */
-		objects: [
+			},
 			{
-				posX: "",
-				posZ: "",
-				model: ""
+				"width": 500,
+				"height": 100,
+				"depth": 20,
+				"posX": -250,
+				"posZ": 0,
+				"angle": 1.57,
+				"texture": "assets/textures/floor/dark_wood.jpg",
+				"doors": [],
+				"windows": [],
+				"paintings": []
+			}
+		
+		],
+		"objects": [
+			{
+				"posX": "",
+				"posZ": "",
+				"model": ""
 			}
 		]
-	]
+	}
+]
 }
