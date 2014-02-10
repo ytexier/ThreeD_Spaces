@@ -14,4 +14,6 @@ ThreeDSpaces.Model =  function(data) {
 		scene.add(this);
 	}
 
+	this.generate();
+
 }

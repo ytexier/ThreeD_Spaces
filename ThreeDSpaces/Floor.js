@@ -3,6 +3,8 @@ ThreeDSpaces.Floor = function(data) {
 	if(data === undefined)
 		return;
 
+	console.log("floor");
+
 	var rawWalls = data.walls;
 	var rawObjects = data.objects;
 
@@ -11,8 +13,9 @@ ThreeDSpaces.Floor = function(data) {
 	var objects = [];
 
 	this.generate = function() {
-		for(wall in rawWalls) {
-			walls.push(new ThreeDSpaces.Wall(wall));
+		for(var i = 0; i < rawWalls.length; i++) {
+			console.log(rawWalls[i]);
+			walls.push(new ThreeDSpaces.Wall(rawWalls[i]));
 		} 
 		for(object in rawObjects) {
 			objects.push(new ThreeDSpaces.Model(object));
@@ -20,6 +23,10 @@ ThreeDSpaces.Floor = function(data) {
 	}
 
 	this.generateLight = function() {
+
+	}
+
+	this.generateGround = function()) {
 
 	}
 
@@ -31,5 +38,7 @@ ThreeDSpaces.Floor = function(data) {
 			objects[i].addToScene(scene);
 		}
 	}
+
+	this.generate();
 
 }
