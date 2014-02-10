@@ -1,8 +1,8 @@
 Museum : ok
 
 Floor :
-	ajouter texuture pour le sol = generateGround()
-	ajouter éclairage = generateLight()
+	ajouter texuture pour le sol = generateGround() - TEST
+	ajouter éclairage = generateLight() - TEST
 	ajouter les données correspondantes dans le json : ground texture, éclairages
 	gérer position de l'étage / hauteur de l'étage
 

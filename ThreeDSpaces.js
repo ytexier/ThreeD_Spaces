@@ -1,20 +1,15 @@
-var ThreeDSpaces = { rev: '0.1' }; 
+var ThreeDSpaces = { rev: '1' }; 
 
 ThreeDSpaces.Museum = function(data) {
 
 	if(data === undefined)
 		return;
 
-	console.log("museum");
-	console.log(data.name);
-	console.log(data.floors);
-
 	var rawFloors = data.floors;
 	var floors = [];
 
 	this.generate = function() {
 		for(var i = 0; i < rawFloors.length; i++) {
-			console.log(rawFloors[i]);
 			floors.push(new ThreeDSpaces.Floor(rawFloors[i]));
 		}
 	}
@@ -33,18 +28,19 @@ ThreeDSpaces.Floor = function(data) {
 	if(data === undefined)
 		return;
 
-	console.log("floor");
-
 	var rawWalls = data.walls;
+	var rawLights = []; //data.lights
 	var rawObjects = data.objects;
+	var rawGround; //data.ground
 
 	var r = data.r;
 	var walls = [];
 	var objects = [];
+	var lights = [];
+	var ground;
 
 	this.generate = function() {
 		for(var i = 0; i < rawWalls.length; i++) {
-			console.log(rawWalls[i]);
 			walls.push(new ThreeDSpaces.Wall(rawWalls[i]));
 		} 
 		for(object in rawObjects) {
@@ -53,13 +49,30 @@ ThreeDSpaces.Floor = function(data) {
 	}
 
 	this.generateLight = function() {
-
+		for(var i = 0; i < rawLights.length; i++) {
+			var light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.x = rawLights[i].posX;
+            light.position.y = rawLights[i].posY;
+            light.position.z = rawLights[i].posZ;
+            light.castShadow = true;
+            lights.push(light);
+		}
 	}
 
-	this.generateGround = function()) {
-
+	this.generateGround = function() {
+		if(rawGround === undefined)
+			return;
+		var ground_texture = new THREE.ImageUtils.loadTexture(rawGround.texture);
+        var ground_material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: ground_texture } );
+        ground = new Physijs.PlaneMesh(
+        	new THREE.PlaneGeometry(rawGround.width, rawGround.depth, 10, 10), ground_material, 0
+        	);
+        // rotation du sol pour qu'il soit a l'horizontale
+        ground.rotation.x = -Math.PI / 2;
+        ground.position.y = -20;
+        ground.receiveShadow = true;// pour que le sol affiche l'ombre
 	}
-
+                    
 	this.addToScene = function(scene) {
 		for(var i = 0; i < walls.length; i++) {
 			walls[i].addToScene(scene);
@@ -67,6 +80,11 @@ ThreeDSpaces.Floor = function(data) {
 		for(var i = 0; i < objects.length; i++) {
 			objects[i].addToScene(scene);
 		}
+		for(var i = 0; i < lights.length; i++) {
+			scene.add(lights[i]);
+		}
+		if(ground != undefined)
+			scene.add(ground);
 	}
 
 	this.generate();
@@ -151,7 +169,7 @@ ThreeDSpaces.Wall = function (data) {
 			door_material = new THREE.MeshBasicMaterial({color: 0xffffff});
 			door_mesh = new THREE.Mesh(door_geometry, wall_material);
 			door_mesh.position.x = rawDoors[i].posX;
-			//door_mesh.position.y = rawObject.y;
+			door_mesh.position.y = -(height - rawDoors[i].height)/2;
 			door_mesh.position.z = rawDoors[i].posZ;
 			door_mesh.rotation.y = angle;
 
