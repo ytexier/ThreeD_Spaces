@@ -34,12 +34,23 @@ initScene = function(data) {
 
     scene.add(controls.getObject());
 
+
+    //Init light
+    scene.add( new THREE.AmbientLight( 0x212223) );
+    renderer.shadowMapEnabled = true;
+    renderer.shadowMapSoft = false;
+    renderer.shadowCameraNear = 3;
+    renderer.shadowCameraFar = camera.far;
+    renderer.shadowCameraFov = 50;
+    renderer.shadowMapBias = 0.0039;
+    renderer.shadowMapDarkness = 0.5;
+    renderer.shadowMapWidth = 1024;
+    renderer.shadowMapHeight = 1024; 
+
+
     museum = new ThreeDSpaces.Museum(data);
     museum.addToScene(scene);
     
-    //wall = new ThreeDSpaces.Wall(scene, data);
-    //wall.addToScene(scene);
-
     animate();
   };
 
