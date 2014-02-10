@@ -56,7 +56,7 @@ ThreeDSpaces.Floor = function(data) {
 
 	}
 
-	this.generateGround = function()) {
+	this.generateGround = function() {
 
 	}
 
