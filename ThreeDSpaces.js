@@ -56,6 +56,10 @@ ThreeDSpaces.Floor = function(data) {
 
 	}
 
+	this.generateGround = function()) {
+
+	}
+
 	this.addToScene = function(scene) {
 		for(var i = 0; i < walls.length; i++) {
 			walls[i].addToScene(scene);
@@ -200,10 +204,6 @@ ThreeDSpaces.Wall = function (data) {
 
 
 	this.addToScene = function(scene) {
-		var geometry = new THREE.CubeGeometry(20,20,20);
-		var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-		var cube = new Physijs.BoxMesh( geometry, material, 0 );
-		scene.add(cube);
 		scene.add(physiObject);
 	}
 

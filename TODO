@@ -1,0 +1,13 @@
+Museum : ok
+
+Floor :
+	ajouter texuture pour le sol = generateGround()
+	ajouter éclairage = generateLight()
+	ajouter les données correspondantes dans le json : ground texture, éclairages
+
+Wall :
+	ajouter fenetres = generateWindows()
+	ajouter peintures = generatePaintings()
+
+Model : 
+	ajouter model = generate()
