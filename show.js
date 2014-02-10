@@ -11,7 +11,7 @@ Physijs.scripts.worker = 'assets/lib/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 var initScene;
-var museum;
+var museum, wall;
 var scene, camera, controls, renderer;
 var objects = [];
 var time = Date.now();
@@ -33,16 +33,17 @@ initScene = function(data) {
     controls = new THREE.PointerLockControls(camera);
 
     scene.add(controls.getObject());
+
+    //museum = new ThreeDSpaces.Museum(data);
+    //museum.addToScene(scene);
     
-    museum = new ThreeDSpaces.Museum(data);
-    museum.addToScene(scene);
-    console.log(renderer);
-    console.log(camera);
-    console.log(scene);
+    wall = new ThreeDSpaces.Wall(scene, data);
+    wall.addToScene(scene);
+
     animate();
   };
 
-window.onload = load_objects('data.json');
+window.onload = load_objects('wall.json');
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.
