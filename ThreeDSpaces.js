@@ -73,7 +73,7 @@ ThreeDSpaces.Floor = function(data) {
  * [Wall description]
  * @param {[type]} data [description]
  */
-ThreeDSpaces.Wall = function (scene, data) {
+ThreeDSpaces.Wall = function (data) {
 	if(data === undefined)
 		return;
 
@@ -96,7 +96,7 @@ ThreeDSpaces.Wall = function (scene, data) {
 	var posY = data.posY;
 	var posZ = data.posZ;
 
-	var angle = data.rotation;
+	var angle = data.angle;
 	var texture = data.texture;
 
 	var rawDoors = data.doors;
@@ -117,8 +117,8 @@ ThreeDSpaces.Wall = function (scene, data) {
 		basic_wall_mesh.overdraw = true;
 		basic_wall_mesh.position.x = posX;
 		basic_wall_mesh.position.z = posZ;
-		//basic_wall_mesh.rotation.y = angle;
-		//scene.add(basic_wall_mesh);
+
+		basic_wall_mesh.rotation.y = angle;
 
 		rawObject = basic_wall_mesh;
 
@@ -129,7 +129,7 @@ ThreeDSpaces.Wall = function (scene, data) {
 		var wall_mesh = new Physijs.BoxMesh(currentGeometry, wall_material, 0);
 		wall_mesh.position.x = posX;
 		wall_mesh.position.z = posZ;
-		//wall_mesh.rotation.y = angle;
+		wall_mesh.rotation.y = angle;
 		physiObject = wall_mesh;
 		
 	}
@@ -142,24 +142,24 @@ ThreeDSpaces.Wall = function (scene, data) {
 	this.generate_doors = function(doors) {
 		for(var i = 0; i < rawDoors.length; i++) {
 			
-			door_geometry = new THREE.CubeGeometry(rawDoors[i].width, rawDoors[i].height, rawObject.z);
+			door_geometry 
+				= new THREE.CubeGeometry(rawDoors[i].width, rawDoors[i].height, rawObject.position.z);
 			door_material = new THREE.MeshBasicMaterial({color: 0xffffff});
 			door_mesh = new THREE.Mesh(door_geometry, wall_material);
 			door_mesh.position.x = rawDoors[i].posX;
+			//door_mesh.position.y = rawObject.y;
 			door_mesh.position.z = rawDoors[i].posZ;
-			//door_mesh.rotation.y = angle;
+			door_mesh.rotation.y = angle;
 
-			//scene.add(this.getObject());
 			var wall_bsp = new ThreeBSP(this.getObject());
 			var door_bsp = new ThreeBSP(door_mesh);
 			var wall_substract = wall_bsp.subtract(door_bsp);
 
 			currentGeometry = wall_substract.toGeometry();
-			//scene.add(new THREE.Mesh(currentGeometry, wall_material));
 
 			var result = wall_substract.toMesh(wall_material);
 			result.geometry.computeVertexNormals();
-			scene.add(result);
+
 			rawObject = result;
 		}
 	}

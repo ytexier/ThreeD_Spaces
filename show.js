@@ -34,16 +34,16 @@ initScene = function(data) {
 
     scene.add(controls.getObject());
 
-    //museum = new ThreeDSpaces.Museum(data);
-    //museum.addToScene(scene);
+    museum = new ThreeDSpaces.Museum(data);
+    museum.addToScene(scene);
     
-    wall = new ThreeDSpaces.Wall(scene, data);
-    wall.addToScene(scene);
+    //wall = new ThreeDSpaces.Wall(scene, data);
+    //wall.addToScene(scene);
 
     animate();
   };
 
-window.onload = load_objects('wall.json');
+window.onload = load_objects('data.json');
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.
