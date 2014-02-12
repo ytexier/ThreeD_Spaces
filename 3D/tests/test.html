@@ -1,0 +1,96 @@
+<html>
+<head>
+<script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="assets/lib/three.min.js"></script>
+<script type="text/javascript" src="assets/lib/ColladaLoader.js"></script>
+<script type="text/javascript" src="assets/js/controls/FirstPersonControls.js"></script>
+<script type="text/javascript" src="assets/js/controls/PointerLockControls.js"></script>
+
+</head>
+<body>
+<div id="blocker">
+
+                    <div id="instructions">
+                            <span style="font-size:40px">Click to play</span>
+                            <br />
+                            (W, A, S, D = Move, SPACE = Jump, MOUSE = Look around)
+                    </div>
+
+            </div>
+<script type="text/javascript">
+
+var controls;
+
+var scene = new THREE.Scene();
+var clock = new THREE.Clock();
+var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+var renderer = new THREE.WebGLRenderer();
+
+
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+var geometry = new THREE.CubeGeometry(1,1,1);
+var material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
+var cube = new THREE.Mesh( geometry, material );
+
+camera.position.z = 5;
+scene.add(cube);
+
+/**
+ * [fps Declares Fist Person Controls]
+ * @return {[null]}
+ */	
+function fps() {
+
+	controls = new THREE.FirstPersonControls(camera);
+	controls.movementSpeed = 1;
+	controls.lookSpeed = 0.05;
+	controls.noFly = true;
+	controls.lookVertical = false;
+	scene.add(controls);
+
+}
+
+/**
+ * [pointer_lock Declares Pointer Lock Controls]
+ * @return {[null]}
+ */
+function pointer_lock() {
+	//controls = new THREE.PointerLockControls(camera);
+	//scene.add(controls.getObject());
+	 window.addEventListener("click",function() {
+            if (!mouseLocked) {
+                Metrix.LockMouse(mouseMove,mouseExit);//If mouse isnt locked and mouse clicked, lock mouse
+                Metrix.AddObject(user);//Unpause be adding user back to the metrix world
+            }
+            mouseLocked = true;
+        });
+}
+
+/**
+ * [render Renders scene]
+ * @return {[null]}
+ */
+function render() {
+	requestAnimationFrame(render);
+	//cube.rotation.x += 0.1;
+	//cube.rotation.z += 0.1;
+	controls.update(clock.getDelta());
+	renderer.render(scene, camera);
+}
+
+function animate() {
+	requestAnimationFrame(animate);
+	controls.isOnObject(false);
+}
+
+//pointer_test();
+fps();
+render();
+
+</script>	
+</body>
+</html>
+
+
