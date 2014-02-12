@@ -53,6 +53,7 @@ ThreeDSpaces.Floor = function(data) {
 		} 
 		
 		for(var i = 0; i < rawObjects.length; i++) {
+			console.log("R= " + r);
 			console.log("nb models " + rawObjects.length);
 			models.push(new ThreeDSpaces.Model(rawObjects[i], r));
 		}
@@ -70,10 +71,13 @@ ThreeDSpaces.Floor = function(data) {
 	}
 
 	this.generateGround = function() {
+		var width = data.width;
+		var height = data.height;
+		var depth = data.depth;
 		console.log("TEXTURE =" + texture);
 		var floor_texture = new THREE.ImageUtils.loadTexture(texture);
 		var floor_material = new THREE.MeshBasicMaterial( { color: 0xffffff, map: floor_texture } );
-		floor_mesh = new THREE.Mesh(new THREE.CubeGeometry(1000, 1000, 10, 10), floor_material);
+		floor_mesh = new THREE.Mesh(new THREE.CubeGeometry(width, height, depth, 10), floor_material);
 		floor_mesh.rotation.x = -Math.PI / 2;
 		floor_mesh.position.y = r;//test, en fonction de l'etage
 		floor_mesh.receiveShadow = true;
@@ -84,7 +88,8 @@ ThreeDSpaces.Floor = function(data) {
 			walls[i].addToScene(scene);
 		}
 		for(var i = 0; i < models.length; i++) {
-			//models[i].addToScene(scene);
+
+			models[i].addToScene(scene);
 		}
 		for(var i = 0; i < lights.length; i++) {
 			lights[i].addToScene(scene);
@@ -248,9 +253,23 @@ ThreeDSpaces.Model =  function(data, r) {
 
 	this.generate = function(r) {
 
-		console.log(model);
-		console.log(posX);
-		console.log(posZ);
+		console.log("TEST"+model);
+		console.log("TEST"+posX);
+		console.log("TEST"+posZ);
+
+		var loader = new THREE.ColladaLoader();
+        loader.load(model, function (collada) {
+            object = collada.scene;
+            object.scale.x = object.scale.y = object.scale.z =  1;
+            object.updateMatrix();
+            object.rotation.x = -Math.PI / 2;
+            object.position.y = r;
+            object.position.z = posZ;
+            object.position.x = posX;
+            object.receiveShadow = true;
+            object.castShadow = true;
+            scene.add(object);
+        });
 
 /*
 		loader.load(model, function (collada) {
@@ -268,7 +287,7 @@ ThreeDSpaces.Model =  function(data, r) {
 	}
 
 	this.addToScene = function(scene) {
-		scene.add(object);
+		//scene.add(object);
 	}
 
 	this.generate(r);
@@ -284,9 +303,7 @@ ThreeDSpaces.Light =  function(data, r) {
 
 	var posX = data.posX;
 	var posZ = data.posZ;
-	var posY = data.posY;
 
-		console.log("light_posY "+posY);
 		console.log("light_posX "+posX);
 		console.log("light_posZ "+posZ);
 
