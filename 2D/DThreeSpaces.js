@@ -1,5 +1,21 @@
 var DThreeSpaces = { rev: '0.1' }; 
 
+DThreeSpaces.Container = function(nbGrid){
+    var grids = [];
+    for(var i=0; i<nbGrid; i++){
+        grids.push(new DThreeSpaces.Grid());
+    }
+    this.setVisibleGrid = function(indexGrid){
+        console.log("visible indexGrid" + indexGrid);
+        grids[indexGrid].setVisible();
+    }
+    this.setHiddenGrid = function(indexGrid){
+        console.log("hidden indexGrid" + indexGrid);
+        grids[indexGrid].setHidden();
+    }
+
+}
+
 DThreeSpaces.Grid = function() {
 
 	var width = 800;
@@ -15,8 +31,11 @@ DThreeSpaces.Grid = function() {
         .append("svg:svg")
         .attr("width", width) //Set width of the SVG canvas
         .attr("height", height); //Set height of the SVG canvas
+        
 
     svgGrid.on("click", mouseclick);
+    svgGrid.style("visibility", "hidden");
+    svgGrid.style("position", "absolute") 
 
     /*
     * range(1,2,3)
@@ -70,6 +89,18 @@ DThreeSpaces.Grid = function() {
                 .attr("stroke", "black");
                 firstClick=true;
             }
+    }
+
+    this.setVisible = function() {
+        svgGrid.style("visibility", "visible");
+    }
+    this.setHidden = function() {
+        svgGrid.style("visibility", "hidden");
+    }
+    
+
+    this.getTest = function(){
+        return "lol";
     }
 
 }

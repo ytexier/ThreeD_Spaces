@@ -5,12 +5,28 @@
     <script type="text/javascript" src="DThreeSpaces.js"></script>
   </head>
   <body>
+    <form>
+      <label><input type="radio" name="grid" value="0" onChange="visibility()" checked> First Floor</label>
+      <label><input type="radio" name="grid" value="1" onChange="visibility()"> Second Floor</label>
+      <label><input type="radio" name="grid" value="2" onChange="visibility()"> Third Floor</label>
+    </form>
 
     <div id="grid"></div>
 
     <script type="text/javascript">
 
-      new DThreeSpaces.Grid();
+      var container = new DThreeSpaces.Container(3);
+
+      function visibility(){
+        var radio = d3.selectAll("input[name=grid]")
+        .each(function(d){ 
+          if(d3.select(this).node().checked == true){
+            container.setVisibleGrid(this.value);
+          }else {
+            container.setHiddenGrid(this.value);
+          }
+        });
+      }
 
     </script>
 
