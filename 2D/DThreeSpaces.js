@@ -2,6 +2,8 @@ var DThreeSpaces = { rev: '0.1' };
 
 DThreeSpaces.Container = function(){
     var grids = [];
+    var currentGrid = 0;
+    var currentItem = "";
     this.setVisibleGrid = function(indexGrid){
         grids[indexGrid].setVisible();
     }
@@ -9,22 +11,34 @@ DThreeSpaces.Container = function(){
         grids[indexGrid].setHidden();
     }
     this.addGrid = function(){
-        grids.push(new DThreeSpaces.Grid());
+        grids.push(new DThreeSpaces.Grid(this));
     }
     this.getLength = function(){
         return grids.length;
     }
-
+    this.setCurrentGrid = function(index){
+        currentGrid = index;
+    }
+    this.getCurrentGrid = function(){
+        return currentGrid;
+    }
+    this.setCurrentItem = function(item){
+        currentItem = item;
+    }
+    this.getCurrentItem = function(){
+        return currentItem;
+    }
 }
 
-DThreeSpaces.Grid = function() {
+DThreeSpaces.Grid = function(container) {
 
+    var container = container;
     var walls = [];
     var objects = [];
     var floors = [];
 
-	var width = 800;
-	var height = 800;
+	var width = 700;
+	var height = 700;
 
     var firstClick = true;
     var tempPositions = [];
@@ -35,8 +49,9 @@ DThreeSpaces.Grid = function() {
     var svgGrid = d3.select("#grid")
         .append("svg:svg")
         .attr("width", width) //Set width of the SVG canvas
-        .attr("height", height); //Set height of the SVG canvas
-        
+        .attr("height", height) //Set height of the SVG canvas
+        .style("background","lightgray");
+     
 
     svgGrid.on("click", mouseclick);
     svgGrid.style("visibility", "hidden");
@@ -56,9 +71,9 @@ DThreeSpaces.Grid = function() {
     .data(x_axis)
     .enter().append("svg:line")
     .attr("x1", function(d){return d;})
-    .attr("y1", 25)
+    .attr("y1", 0)
     .attr("x2", function(d){return d;})
-    .attr("y2", height-25)
+    .attr("y2", height)
     .style("stroke", "rgb(6,120,155)")
     .style("stroke-width", 2);       
       
@@ -66,33 +81,40 @@ DThreeSpaces.Grid = function() {
     svgGrid.selectAll("line.horizontal")
     .data(y_axis)
     .enter().append("svg:line")
-    .attr("x1", 25)
+    .attr("x1", 0)
     .attr("y1", function(d){return d;})
-    .attr("x2", width-25)
+    .attr("x2", width)
     .attr("y2", function(d){return d;})
     .style("stroke", "rgb(6,120,155)")
     .style("stroke-width", 2);
 
-    //draw wall
+    //if onClick on grid, putting a wall or a floor or a object depending the item selected
     function mouseclick() {
-            //mouse click positions
-            var x = d3.mouse(this)[0];
-            var y = d3.mouse(this)[1];
-            if(firstClick){
-
-                tempPositions[0]=x;
-                tempPositions[1]=y;
-                firstClick=false;
-            }else{
-                var line = svgGrid.append("line")
-                .attr("x1", tempPositions[0])
-                .attr("y1", tempPositions[1])
-                .attr("x2", x)
-                .attr("y2", y)
-                .attr("stroke-width", 2)
-                .attr("stroke", "black");
-                firstClick=true;
-            }
+        switch(container.getCurrentItem()){
+            case "floor":
+                break;
+            case "wall":
+                var x = d3.mouse(this)[0];
+                var y = d3.mouse(this)[1];
+                if(firstClick){
+                    tempPositions[0]=x;
+                    tempPositions[1]=y;
+                    firstClick=false;
+                }else{
+                    var line = svgGrid.append("line")
+                    .attr("x1", tempPositions[0])
+                    .attr("y1", tempPositions[1])
+                    .attr("x2", x)
+                    .attr("y2", y)
+                    .attr("stroke-width", 2)
+                    .attr("stroke", "black");
+                    firstClick=true;
+                }
+                break;
+            case "object":
+                break;
+            default: console.log("currentItem not found");
+        }
     }
 
     this.setVisible = function() {
@@ -102,5 +124,20 @@ DThreeSpaces.Grid = function() {
         svgGrid.style("visibility", "hidden");
     }
     
+}
+
+DThreeSpaces.Floor = function() {
+    var r;
+    var width;
+    var height;
+    var depth;
+    var texture;
+
+
+}
+
+DThreeSpaces.Wall = function() {
+    var x1, y1;
+    var x2, y2;    
 }
 

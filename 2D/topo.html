@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset="utf-8">
+    <title>2D TOPO</title>
+    <style text="text/css">
+      @import url(style.css);
+    </style>
     <script type="text/javascript" src="assets/lib/d3.min.js"></script>
     <script type="text/javascript" src="DThreeSpaces.js"></script>
   </head>
@@ -9,7 +14,16 @@
 
     <div id="divRadioGrid"></div>
  
-    <div id="grid"></div>
+    <div id="grid" class="grid"></div>
+    <div id="menu" class="menu">
+      <form>
+        <input type="radio" name="item" value="floor" onChange="selectItem(this.value)">Floor
+        <br>
+        <input type="radio" name="item" value="wall" onChange="selectItem(this.value)">Wall
+        <br>
+        <input type="radio" name="item" value="object" onChange="selectItem(this.value)">Objet
+      </form>
+    </div>
 
     <script type="text/javascript">
 
@@ -19,9 +33,10 @@
        * set grid visibility depending on option checked or not
        */
       function visibility(){
-        var radio = d3.selectAll("input[name=grid]")
+        var radio = d3.selectAll("input[name=radioGird]")
         .each(function(d){ 
           if(d3.select(this).node().checked == true){
+            container.setCurrentGrid(this.value);
             container.setVisibleGrid(this.value);
           }else {
             container.setHiddenGrid(this.value);
@@ -39,12 +54,27 @@
         .append("input")
         .attr({
           type: "radio",
-          class: "grid",
-          name: "grid",
+          class: "radioGird",
+          name: "radioGird",
           onChange: "visibility()",
           value: function() {return container.getLength();}
         });
         container.addGrid(new DThreeSpaces.Grid());
+      }
+
+      function selectItem(item){
+        switch(item){
+          case "floor":
+            container.setCurrentItem(item);
+            break;
+          case "wall":
+            container.setCurrentItem(item);
+            break;
+          case "object":
+            container.setCurrentItem(item);
+            break;
+          default: console.log("no item selected");
+        }
       }
 
     </script>
