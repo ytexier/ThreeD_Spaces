@@ -36,7 +36,7 @@ DThreeSpaces.Container = function(name){
         var json = "{name:"+name+", floors: [";
         for(var i=0; i<grids.length; i++)
             json += grids[i].toJson().concat(",");
-        return json.slice(0, json.lastIndexOf(",")).concat("]");
+        return json.slice(0, json.lastIndexOf(",")).concat("]}");
     }
 }
 
