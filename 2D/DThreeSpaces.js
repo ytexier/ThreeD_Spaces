@@ -1,22 +1,27 @@
 var DThreeSpaces = { rev: '0.1' }; 
 
-DThreeSpaces.Container = function(nbGrid){
+DThreeSpaces.Container = function(){
     var grids = [];
-    for(var i=0; i<nbGrid; i++){
-        grids.push(new DThreeSpaces.Grid());
-    }
     this.setVisibleGrid = function(indexGrid){
-        console.log("visible indexGrid" + indexGrid);
         grids[indexGrid].setVisible();
     }
     this.setHiddenGrid = function(indexGrid){
-        console.log("hidden indexGrid" + indexGrid);
         grids[indexGrid].setHidden();
+    }
+    this.addGrid = function(){
+        grids.push(new DThreeSpaces.Grid());
+    }
+    this.getLength = function(){
+        return grids.length;
     }
 
 }
 
 DThreeSpaces.Grid = function() {
+
+    var walls = [];
+    var objects = [];
+    var floors = [];
 
 	var width = 800;
 	var height = 800;
@@ -68,8 +73,8 @@ DThreeSpaces.Grid = function() {
     .style("stroke", "rgb(6,120,155)")
     .style("stroke-width", 2);
 
+    //draw wall
     function mouseclick() {
-
             //mouse click positions
             var x = d3.mouse(this)[0];
             var y = d3.mouse(this)[1];
@@ -79,7 +84,6 @@ DThreeSpaces.Grid = function() {
                 tempPositions[1]=y;
                 firstClick=false;
             }else{
-
                 var line = svgGrid.append("line")
                 .attr("x1", tempPositions[0])
                 .attr("y1", tempPositions[1])
@@ -98,10 +102,5 @@ DThreeSpaces.Grid = function() {
         svgGrid.style("visibility", "hidden");
     }
     
-
-    this.getTest = function(){
-        return "lol";
-    }
-
 }
 

@@ -4,19 +4,20 @@
     <script type="text/javascript" src="assets/lib/d3.min.js"></script>
     <script type="text/javascript" src="DThreeSpaces.js"></script>
   </head>
-  <body>
-    <form>
-      <label><input type="radio" name="grid" value="0" onChange="visibility()" checked> First Floor</label>
-      <label><input type="radio" name="grid" value="1" onChange="visibility()"> Second Floor</label>
-      <label><input type="radio" name="grid" value="2" onChange="visibility()"> Third Floor</label>
-    </form>
 
+    <input type="submit" name="addGrid" value="+" onClick="addGrid()">
+
+    <div id="divRadioGrid"></div>
+ 
     <div id="grid"></div>
 
     <script type="text/javascript">
 
-      var container = new DThreeSpaces.Container(3);
+      var container = new DThreeSpaces.Container();
 
+      /**
+       * set grid visibility depending on option checked or not
+       */
       function visibility(){
         var radio = d3.selectAll("input[name=grid]")
         .each(function(d){ 
@@ -26,6 +27,24 @@
             container.setHiddenGrid(this.value);
           }
         });
+      }
+      
+      /**
+       * Make a new input radio and his floor(gird) matched
+       */
+      function addGrid(){
+        var div = d3.select("div[id=divRadioGrid]")
+        .append("label")
+        .text("floor "+ container.getLength())
+        .append("input")
+        .attr({
+          type: "radio",
+          class: "grid",
+          name: "grid",
+          onChange: "visibility()",
+          value: function() {return container.getLength();}
+        });
+        container.addGrid(new DThreeSpaces.Grid());
       }
 
     </script>
