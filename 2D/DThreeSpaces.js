@@ -1,9 +1,12 @@
 var DThreeSpaces = { rev: '0.1' }; 
 
-DThreeSpaces.Container = function(){
+DThreeSpaces.Container = function(name){
+
+    var name = name;
     var grids = [];
     var currentGrid = 0;
     var currentItem = "";
+
     this.setVisibleGrid = function(indexGrid){
         grids[indexGrid].setVisible();
     }
@@ -28,6 +31,13 @@ DThreeSpaces.Container = function(){
     this.getCurrentItem = function(){
         return currentItem;
     }
+
+    this.toJson = function(){
+        var json = "{name:"+name+", floors: [";
+        for(var i=0; i<grids.length; i++)
+            json += grids[i].toJson().concat(",");
+        return json.slice(0, json.lastIndexOf(",")).concat("]");
+    }
 }
 
 DThreeSpaces.Grid = function(container) {
@@ -39,6 +49,7 @@ DThreeSpaces.Grid = function(container) {
 
 	var width = 700;
 	var height = 700;
+    var depth = 2;
 
     var firstClick = true;
     var tempPositions = [];
@@ -109,6 +120,7 @@ DThreeSpaces.Grid = function(container) {
                     .attr("stroke-width", 2)
                     .attr("stroke", "black");
                     firstClick=true;
+                    walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
                 }
                 break;
             case "object":
@@ -123,7 +135,26 @@ DThreeSpaces.Grid = function(container) {
     this.setHidden = function() {
         svgGrid.style("visibility", "hidden");
     }
+
+    this.toJson = function() {
+        var json = "{ width:"+width+",height:"+height+",depth:"+depth;
+        json += ", walls: [";
+        for(var i=0; i<walls.length; i++){
+            json += walls[i].toJson().concat(",");
+        }
+        return json.slice(0, json.lastIndexOf(",")).concat("]}");
+    }
     
+}
+
+DThreeSpaces.Wall = function(x1, y1, x2, y2) {
+    var x1 = x1;
+    var y1 = y1;
+    var x2 = x2;
+    var y2 = y2;
+    this.toJson = function() {
+        return "{x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2+"}"
+    }
 }
 
 DThreeSpaces.Floor = function() {
@@ -131,13 +162,6 @@ DThreeSpaces.Floor = function() {
     var width;
     var height;
     var depth;
-    var texture;
-
-
-}
-
-DThreeSpaces.Wall = function() {
-    var x1, y1;
-    var x2, y2;    
+    var texture; 
 }
 

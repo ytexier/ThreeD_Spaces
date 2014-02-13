@@ -10,7 +10,9 @@
     <script type="text/javascript" src="DThreeSpaces.js"></script>
   </head>
 
-    <input type="submit" name="addGrid" value="+" onClick="addGrid()">
+    <input type="submit" name="addGrid" value="addGrid" onClick="addGrid()">
+
+    <input type="submit" name="displayJSON" value="displayJSON" onClick="displayJSON()">
 
     <div id="divRadioGrid"></div>
  
@@ -27,7 +29,7 @@
 
     <script type="text/javascript">
 
-      var container = new DThreeSpaces.Container();
+      var container = new DThreeSpaces.Container("Museum Test");
 
       /**
        * set grid visibility depending on option checked or not
@@ -75,6 +77,10 @@
             break;
           default: console.log("no item selected");
         }
+      }
+
+      function displayJSON(){
+        alert(container.toJson());
       }
 
     </script>
