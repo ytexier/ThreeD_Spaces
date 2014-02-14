@@ -106,14 +106,6 @@
         alert(container.toJson());
       }
 
-      function displayFiles(){
-        var theFolder = "assets\lib"
-        var fso = new ActiveXObject("Scripting.FileSystemObject");
-        if(fso.folderExists(thefolder)){
-          alert("ok");
-        }
-      }
-
       function resetListModels(){
         var div = d3.select("div[id=listModels]")
         .html("");
