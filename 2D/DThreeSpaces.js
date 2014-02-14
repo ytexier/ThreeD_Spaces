@@ -157,11 +157,4 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2) {
     }
 }
 
-DThreeSpaces.Floor = function() {
-    var r;
-    var width;
-    var height;
-    var depth;
-    var texture; 
-}
 

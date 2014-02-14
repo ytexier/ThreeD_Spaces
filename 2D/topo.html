@@ -7,6 +7,7 @@
       @import url(style.css);
     </style>
     <script type="text/javascript" src="assets/lib/d3.min.js"></script>
+    <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
     <script type="text/javascript" src="DThreeSpaces.js"></script>
   </head>
 
@@ -19,13 +20,14 @@
     <div id="grid" class="grid"></div>
     <div id="menu" class="menu">
       <form>
-        <input type="radio" name="item" value="floor" onChange="selectItem(this.value)">Floor
-        <br>
         <input type="radio" name="item" value="wall" onChange="selectItem(this.value)">Wall
         <br>
         <input type="radio" name="item" value="object" onChange="selectItem(this.value)">Objet
       </form>
     </div>
+
+
+    <div id="listModels" id="listModels"></div>
 
     <script type="text/javascript">
 
@@ -67,13 +69,34 @@
       function selectItem(item){
         switch(item){
           case "floor":
+            resetListModels();
             container.setCurrentItem(item);
             break;
           case "wall":
+            resetListModels();
             container.setCurrentItem(item);
             break;
           case "object":
             container.setCurrentItem(item);
+            $.post(
+              "getModels.php",
+              function(data){
+                $(data).each( function(i){
+                  var div = d3.select("div[id=listModels]")  
+                  .append("ul")
+                  .append("label")
+                  .text(data[i])
+                  .append("input")
+                  .attr({
+                    type: "radio",
+                    class: "radioModel",
+                    name: "radioModel",
+                    value: i
+                  });
+                });
+              },
+              'json'
+            );
             break;
           default: console.log("no item selected");
         }
@@ -81,6 +104,19 @@
 
       function displayJSON(){
         alert(container.toJson());
+      }
+
+      function displayFiles(){
+        var theFolder = "assets\lib"
+        var fso = new ActiveXObject("Scripting.FileSystemObject");
+        if(fso.folderExists(thefolder)){
+          alert("ok");
+        }
+      }
+
+      function resetListModels(){
+        var div = d3.select("div[id=listModels]")
+        .html("");
       }
 
     </script>
