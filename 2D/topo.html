@@ -91,7 +91,8 @@
                     type: "radio",
                     class: "radioModel",
                     name: "radioModel",
-                    value: i
+                    value: data[i],
+                    onChange:"selectObject(this.value)"
                   });
                 });
               },
@@ -100,6 +101,11 @@
             break;
           default: console.log("no item selected");
         }
+      }
+
+
+      function selectObject(model){
+        container.setCurrentObject(model);
       }
 
       function displayJSON(){
