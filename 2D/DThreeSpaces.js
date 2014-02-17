@@ -136,23 +136,12 @@ DThreeSpaces.Grid = function(container) {
                     .attr("x2", x)
                     .attr("y2", y)
                     .attr("stroke-width", 2)
-                    .attr("stroke", "black");
+                    .style("stroke", "red");
 
                     firstClick=false;
 
                 }else{
-
-/*
-                    var line = svgGrid.append("line")
-                        .attr("x1", tempPositions[0])
-                        .attr("y1", tempPositions[1])
-                        .attr("x2", x)
-                        .attr("y2", y)
-                        .attr("stroke-width", 2)
-                        .attr("stroke", "black");
-                    firstClick=true;
-                    walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
-                    */
+                    addWall(x,y);
                 }
                 break;
 
@@ -164,10 +153,27 @@ DThreeSpaces.Grid = function(container) {
         }
     }
 
+    function addWall(x,y){
+
+                svgGrid.append("line")
+                    .attr("class", "added")
+                    .attr("x1", tempPositions[0])
+                    .attr("y1", tempPositions[1])
+                    .attr("x2", x)
+                    .attr("y2", y)
+                    .attr("stroke-width", 2)
+                    .style("stroke", "green");
+    
+                walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
+
+                svgGrid.selectAll("line.current").remove();
+                firstClick=true;
+    }
+
     function addObject(){
+
                 var x = d3.mouse(this)[0];
                 var y = d3.mouse(this)[1];
-                console.log(x + " " + y);
 
                 svgGrid
                     .append("rect")
@@ -202,9 +208,7 @@ DThreeSpaces.Grid = function(container) {
 
                 if(firstClick==true)
                     return;
-
-
-                
+               
                 svgGrid
                     .selectAll("line.current")
                     .attr("x2", x)
