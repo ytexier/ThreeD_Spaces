@@ -1,5 +1,6 @@
 var DThreeSpaces = { rev: '0.1' }; 
 
+
 DThreeSpaces.Container = function(name){
 
     var name = name;
@@ -77,8 +78,8 @@ DThreeSpaces.Grid = function(container) {
         .attr("height", height) //Set height of the SVG canvas
         .style("background","lightgray");
  
-    svgGrid.on("click", mouseclick);
-    svgGrid.on("mouseover", mouseOver);
+    svgGrid.on("click", mouseClickToGrid);
+    svgGrid.on("mousemove", mouseMoveToGrid);
     svgGrid.style("visibility", "hidden");
     svgGrid.style("position", "absolute") 
 
@@ -114,7 +115,7 @@ DThreeSpaces.Grid = function(container) {
         .style("stroke-width", 2);
 
     //if onClick on grid, putting a wall or a floor or a object depending the item selected
-    function mouseclick() {
+    function mouseClickToGrid() {
 
         switch(container.getCurrentItem()){
 
@@ -160,7 +161,7 @@ DThreeSpaces.Grid = function(container) {
 
     function addWall(x,y){
 
-                svgGrid.append("line")
+                var line = svgGrid.append("line")
                     .attr("class", "added")
                     .attr("x1", tempPositions[0])
                     .attr("y1", tempPositions[1])
@@ -168,8 +169,8 @@ DThreeSpaces.Grid = function(container) {
                     .attr("y2", y)
                     .attr("stroke-width", 10)
                     .style("stroke", "green")
-                    .on("mouseover", checkBounds);
-    
+                    .on("mousemove", checkBounds);
+   
                 walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
 
                 svgGrid.selectAll("line.current").remove();
@@ -275,7 +276,7 @@ DThreeSpaces.Grid = function(container) {
 
 
 
-    function mouseOver() {
+    function mouseMoveToGrid() {
 
         var x = d3.mouse(this)[0];
         var y = d3.mouse(this)[1];
@@ -288,7 +289,6 @@ DThreeSpaces.Grid = function(container) {
             case "wall":
 
                 if(firstClick==true){
-                    console.log("MAISS MERD");
                     return;
                 }
                
@@ -316,7 +316,7 @@ DThreeSpaces.Grid = function(container) {
                         .attr("width", objectWidth)
                         .attr("height", objectWidth)
                         .on("click", addObject)
-                        .on("mousemove", mouseOver);
+                        .on("mousemove", mouseMoveToGrid);
 
                     firstMouseOver = false;
                 }else{
