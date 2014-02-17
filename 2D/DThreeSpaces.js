@@ -128,10 +128,21 @@ DThreeSpaces.Grid = function(container) {
 
                     tempPositions[0]=x;
                     tempPositions[1]=y;
+
+                    svgGrid.append("line")
+                    .attr("class", "current")
+                    .attr("x1", tempPositions[0])
+                    .attr("y1", tempPositions[1])
+                    .attr("x2", x)
+                    .attr("y2", y)
+                    .attr("stroke-width", 2)
+                    .attr("stroke", "black");
+
                     firstClick=false;
 
                 }else{
 
+/*
                     var line = svgGrid.append("line")
                         .attr("x1", tempPositions[0])
                         .attr("y1", tempPositions[1])
@@ -141,6 +152,7 @@ DThreeSpaces.Grid = function(container) {
                         .attr("stroke", "black");
                     firstClick=true;
                     walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
+                    */
                 }
                 break;
 
@@ -155,6 +167,7 @@ DThreeSpaces.Grid = function(container) {
     function addObject(){
                 var x = d3.mouse(this)[0];
                 var y = d3.mouse(this)[1];
+                console.log(x + " " + y);
 
                 svgGrid
                     .append("rect")
@@ -168,37 +181,62 @@ DThreeSpaces.Grid = function(container) {
 
                 var model = container.getCurrentObject();
                 objects.push(new DThreeSpaces.Object(x, y, model));
+
+                svgGrid.selectAll("rect.current").remove();
+                container.setCurrentObject("");
+                firstMouseOver=true;
     }
+
 
     function mouseOver() {
 
+        var x = d3.mouse(this)[0];
+        var y = d3.mouse(this)[1];
+        
         switch(container.getCurrentItem()){
 
             case "floor":
                 break;
 
             case "wall":
+
+                if(firstClick==true)
+                    return;
+
+
+                
+                svgGrid
+                    .selectAll("line.current")
+                    .attr("x2", x)
+                    .attr("y2", y);
+                
                 break;
 
             case "object":
 
-                 if(firstMouseOver){
+                if (container.getCurrentObject()=="")
+                    return;
+
+
+                if(firstMouseOver){
                     svgGrid
                         .append("rect")
                         .style("stroke","red")
                         .attr("stroke-width", 3)
                         .attr("class", "current")
-                        .attr("x", d3.mouse(this)[0]-objectWidth/2)
-                        .attr("y", d3.mouse(this)[1]-objectHeight/2)
+                        .attr("x", x-objectWidth/2)
+                        .attr("y", y-objectHeight/2)
                         .attr("width", objectWidth)
-                        .attr("height", objectWidth);
+                        .attr("height", objectWidth)
+                        .on("click", addObject)
+                        .on("mousemove", mouseOver);
+
                     firstMouseOver = false;
                 }else{
                     svgGrid
                         .selectAll("rect.current")
-                        .attr("x", d3.mouse(this)[0]-objectWidth/2)
-                        .attr("y", d3.mouse(this)[1]-objectHeight/2)
-                        .on("click", addObject );
+                        .attr("x", x-objectWidth/2)
+                        .attr("y", y-objectHeight/2);
                 }
 
 
