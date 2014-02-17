@@ -190,8 +190,6 @@ DThreeSpaces.Grid = function(container) {
 
     function mouseOver() {
 
-        console.log(container.getCurrentItem());
-
         var x = d3.mouse(this)[0];
         var y = d3.mouse(this)[1];
         
@@ -204,9 +202,11 @@ DThreeSpaces.Grid = function(container) {
 
                 if(firstClick==true)
                     return;
+
+
                 
                 svgGrid
-                    .selectAll("rect.current")
+                    .selectAll("line.current")
                     .attr("x2", x)
                     .attr("y2", y);
                 
