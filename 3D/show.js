@@ -12,7 +12,7 @@ Physijs.scripts.ammo = 'ammo.js';
 
 var initScene;
 var museum, wall;
-var scene, camera, controls, renderer;
+var scene, camera, controls, renderer, ray;
 var objects = [];
 var time = Date.now();
 
@@ -32,6 +32,9 @@ initScene = function(data) {
     camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
     controls = new THREE.PointerLockControls(camera);
 
+    ray = new THREE.Raycaster();
+    ray.ray.direction.set(0, -1, 0);
+
     scene.add(controls.getObject());
 
 
@@ -49,6 +52,7 @@ initScene = function(data) {
 
 
     museum = new ThreeDSpaces.Museum(data);
+    objects = museum.toObjects();
     museum.addToScene(scene);
     
     animate();
@@ -67,6 +71,17 @@ function animate() {
   scene.simulate(undefined, 1);
   requestAnimationFrame(animate);
   controls.isOnObject(false);
+  ray.ray.origin.copy(controls.getObject().position);
+  ray.ray.origin.y -= 10;
+
+  var intersections = ray.intersectObjects(objects);
+
+  if ( intersections.length > 0 ) {
+    var distance = intersections[ 0 ].distance;
+    if ( distance > 0 && distance < 10 ) {
+      controls.isOnObject( true );
+    }
+  }
 
    
   controls.update(Date.now() - time);
