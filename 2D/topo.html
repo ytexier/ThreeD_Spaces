@@ -119,17 +119,9 @@
 
 
     $(document).keyup(function(e) {
-      if (e.keyCode == 27) {     
-        /*
-        var grid = container.getSvgGrid();
-        grid.test();
-        */
-                  //d3.selectAll("line.current").remove();
-                  //d3.selectAll("circle.current").remove();
-                  //d3.selectAll("rect.current").remove();
-                  //
-      }
-
+      //cleaning all currentLine, currentRect, currentCircle with keyup escap
+      if (e.keyCode == 27)   
+        container.cleaning();
     });
 
 

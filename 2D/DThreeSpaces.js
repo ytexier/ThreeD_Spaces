@@ -8,18 +8,6 @@ DThreeSpaces.Container = function(name){
     var currentItem = "";
     var currentObject = "";
 
-/*
-    var svgGrid;
-    this.getSvgGrid = function(){
-        return svgGrid;
-    }
-    this.setSvgGrid = function(grid){
-        svgGrid = grid;
-    }
-    */
-
-
-
     this.setVisibleGrid = function(indexGrid){
         grids[indexGrid].setVisible();
     }
@@ -34,6 +22,9 @@ DThreeSpaces.Container = function(name){
     }
     this.setCurrentGrid = function(index){
         currentGrid = index;
+    }
+    this.cleaning = function(){
+        return grids[currentGrid].cleaning();
     }
     this.setCurrentObject = function(model){
         currentObject = model;
@@ -85,13 +76,9 @@ DThreeSpaces.Grid = function(container) {
         .attr("width", width) //Set width of the SVG canvas
         .attr("height", height) //Set height of the SVG canvas
         .style("background","lightgray");
-
-    //container.setSvgGrid(svgGrid);
-     
-
+ 
     svgGrid.on("click", mouseclick);
     svgGrid.on("mouseover", mouseOver);
-    //svgGrid.on("keydown", test);
     svgGrid.style("visibility", "hidden");
     svgGrid.style("position", "absolute") 
 
@@ -106,25 +93,25 @@ DThreeSpaces.Grid = function(container) {
         
     // Using the x_axis to generate vertical lines
     svgGrid.selectAll("line.vertical")
-    .data(x_axis)
-    .enter().append("svg:line")
-    .attr("x1", function(d){return d;})
-    .attr("y1", 0)
-    .attr("x2", function(d){return d;})
-    .attr("y2", height)
-    .style("stroke", "rgb(6,120,155)")
-    .style("stroke-width", 2);       
+        .data(x_axis)
+        .enter().append("svg:line")
+        .attr("x1", function(d){return d;})
+        .attr("y1", 0)
+        .attr("x2", function(d){return d;})
+        .attr("y2", height)
+        .style("stroke", "rgb(6,120,155)")
+        .style("stroke-width", 2);       
       
     // Using the y_axis to generate horizontal lines       
     svgGrid.selectAll("line.horizontal")
-    .data(y_axis)
-    .enter().append("svg:line")
-    .attr("x1", 0)
-    .attr("y1", function(d){return d;})
-    .attr("x2", width)
-    .attr("y2", function(d){return d;})
-    .style("stroke", "rgb(6,120,155)")
-    .style("stroke-width", 2);
+        .data(y_axis)
+        .enter().append("svg:line")
+        .attr("x1", 0)
+        .attr("y1", function(d){return d;})
+        .attr("x2", width)
+        .attr("y2", function(d){return d;})
+        .style("stroke", "rgb(6,120,155)")
+        .style("stroke-width", 2);
 
     //if onClick on grid, putting a wall or a floor or a object depending the item selected
     function mouseclick() {
@@ -204,8 +191,8 @@ DThreeSpaces.Grid = function(container) {
         var y1 = line.attr("y1");
         var y2 = line.attr("y2");
 
-        var xRange = 5;
-        var yRange = 5;
+        var xRange = 7;
+        var yRange = 7;
 
         var currentLine = svgGrid.select("line.current");
 
@@ -256,9 +243,11 @@ DThreeSpaces.Grid = function(container) {
 
     }
 
-    function test(){
-        alert("lol");
-        ///alert(d3.event.keyCode);
+    this.cleaning = function(){
+        d3.selectAll("rect.current").remove();
+        d3.selectAll("line.current").remove();
+        d3.selectAll("circle.current").remove();
+        firstClick=true;
     }
 
     function addObject(){
@@ -298,8 +287,10 @@ DThreeSpaces.Grid = function(container) {
 
             case "wall":
 
-                if(firstClick==true)
+                if(firstClick==true){
+                    console.log("MAISS MERD");
                     return;
+                }
                
                 svgGrid
                     .selectAll("line.current")
@@ -341,6 +332,7 @@ DThreeSpaces.Grid = function(container) {
         }
 
     }
+
 
     this.setVisible = function() {
         svgGrid.style("visibility", "visible");
