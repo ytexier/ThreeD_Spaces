@@ -88,11 +88,11 @@
                   .text(data[i])
                   .append("input")
                   .attr({
-                    type: "radio",
+                    type: "submit",
                     class: "radioModel",
                     name: "radioModel",
                     value: data[i],
-                    onChange:"selectObject(this.value)"
+                    onClick:"selectObject(this.value)"
                   });
                 });
               },
