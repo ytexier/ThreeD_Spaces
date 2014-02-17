@@ -8,6 +8,18 @@ DThreeSpaces.Container = function(name){
     var currentItem = "";
     var currentObject = "";
 
+/*
+    var svgGrid;
+    this.getSvgGrid = function(){
+        return svgGrid;
+    }
+    this.setSvgGrid = function(grid){
+        svgGrid = grid;
+    }
+    */
+
+
+
     this.setVisibleGrid = function(indexGrid){
         grids[indexGrid].setVisible();
     }
@@ -73,10 +85,13 @@ DThreeSpaces.Grid = function(container) {
         .attr("width", width) //Set width of the SVG canvas
         .attr("height", height) //Set height of the SVG canvas
         .style("background","lightgray");
+
+    //container.setSvgGrid(svgGrid);
      
 
     svgGrid.on("click", mouseclick);
     svgGrid.on("mouseover", mouseOver);
+    //svgGrid.on("keydown", test);
     svgGrid.style("visibility", "hidden");
     svgGrid.style("position", "absolute") 
 
@@ -126,19 +141,7 @@ DThreeSpaces.Grid = function(container) {
 
                 if(firstClick){
 
-                    tempPositions[0]=x;
-                    tempPositions[1]=y;
-
-                    svgGrid.append("line")
-                    .attr("class", "current")
-                    .attr("x1", tempPositions[0])
-                    .attr("y1", tempPositions[1])
-                    .attr("x2", x)
-                    .attr("y2", y)
-                    .attr("stroke-width", 2)
-                    .style("stroke", "red");
-
-                    firstClick=false;
+                    addCurrentLine(x,y);
 
                 }else{
                     addWall(x,y);
@@ -153,6 +156,21 @@ DThreeSpaces.Grid = function(container) {
         }
     }
 
+    function addCurrentLine(x,y){
+                    tempPositions[0]=x;
+                    tempPositions[1]=y;
+
+                    svgGrid.append("line")
+                    .attr("class", "current")
+                    .attr("x1", x)
+                    .attr("y1", y)
+                    .attr("x2", x)
+                    .attr("y2", y)
+                    .attr("stroke-width", 10)
+                    .style("stroke", "red");
+                    firstClick=false;
+    }
+
     function addWall(x,y){
 
                 svgGrid.append("line")
@@ -161,13 +179,86 @@ DThreeSpaces.Grid = function(container) {
                     .attr("y1", tempPositions[1])
                     .attr("x2", x)
                     .attr("y2", y)
-                    .attr("stroke-width", 2)
-                    .style("stroke", "green");
+                    .attr("stroke-width", 10)
+                    .style("stroke", "green")
+                    .on("mouseover", checkBounds);
     
                 walls.push(new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y));
 
                 svgGrid.selectAll("line.current").remove();
+                svgGrid.selectAll("circle.current").remove();
                 firstClick=true;
+
+                console.log("wall added !");
+    }
+
+    function checkBounds(){
+
+        var xMouse = d3.mouse(this)[0];
+        var yMouse = d3.mouse(this)[1];
+
+        var line = d3.select(this);
+
+        var x1 = line.attr("x1");
+        var x2 = line.attr("x2");
+        var y1 = line.attr("y1");
+        var y2 = line.attr("y2");
+
+        var xRange = 5;
+        var yRange = 5;
+
+        var currentLine = svgGrid.select("line.current");
+
+        if(currentLine.empty()){
+
+            if(     (x2 < (xMouse + xRange) && x2 > (xMouse - xRange))
+                &&  (y2 < (yMouse + yRange) && y2 > (yMouse - yRange))
+            ){
+                svgGrid.append("circle")
+                    .attr("class", "current")
+                    .attr("cx", x2).attr("cy", y2).attr("r", 10)
+                    .attr("stroke-width", 3).style("stroke", "red");
+                addCurrentLine(x2, y2);
+            }
+
+            if(     (x1 < (xMouse + xRange) && x1 > (xMouse - xRange))
+                &&  (y1 < (yMouse + yRange) && y1 > (yMouse - yRange))
+            ){
+                svgGrid.append("circle")
+                    .attr("class", "current")
+                    .attr("cx", x1).attr("cy", y1).attr("r", 10)
+                    .attr("stroke-width", 3).style("stroke", "red");
+                addCurrentLine(x1, y1);
+            }
+        }else{
+
+            if(     (x2 < (xMouse + xRange) && x2 > (xMouse - xRange))
+                &&  (y2 < (yMouse + yRange) && y2 > (yMouse - yRange))
+            ){
+                var circle = svgGrid.append("circle")
+                    .attr("class", "current")
+                    .attr("cx", x2).attr("cy", y2).attr("r", 10)
+                    .attr("stroke-width", 3).style("stroke", "red");
+                addWall(circle.attr("cx"), circle.attr("cy"));
+             }
+
+            if(     (x1 < (xMouse + xRange) && x1 > (xMouse - xRange))
+                &&  (y1 < (yMouse + yRange) && y1 > (yMouse - yRange))
+            ){
+                var circle = svgGrid.append("circle")
+                    .attr("class", "current")
+                    .attr("cx", x1).attr("cy", y1).attr("r", 10)
+                    .attr("stroke-width", 3).style("stroke", "red");
+                addWall(circle.attr("cx"), circle.attr("cy"));
+            }
+
+        }
+
+    }
+
+    function test(){
+        alert("lol");
+        ///alert(d3.event.keyCode);
     }
 
     function addObject(){
@@ -192,6 +283,7 @@ DThreeSpaces.Grid = function(container) {
                 container.setCurrentObject("");
                 firstMouseOver=true;
     }
+
 
 
     function mouseOver() {
@@ -243,7 +335,6 @@ DThreeSpaces.Grid = function(container) {
                         .attr("y", y-objectHeight/2);
                 }
 
-
                 break;
 
             default: console.log("currentItem not found");
@@ -281,10 +372,19 @@ DThreeSpaces.Grid = function(container) {
 }
 
 DThreeSpaces.Wall = function(x1, y1, x2, y2) {
+
     var x1 = x1;
     var y1 = y1;
     var x2 = x2;
     var y2 = y2;
+
+
+    var width;
+    var height;
+    var depth;
+    var posX;
+    var posZ;               
+
     this.toJson = function() {
         return "{x1:"+x1+",y1:"+y1+",x2:"+x2+",y2:"+y2+"}"
     }
