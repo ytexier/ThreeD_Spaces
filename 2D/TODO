@@ -1,0 +1,4 @@
+
+2D:
+	- faire le drag des walls _ inprogress
+	- update les coordonnées apres un drag(walls/objects) => dragend
