@@ -1,20 +1,16 @@
-var ThreeDSpaces = { rev: '0.1' }; 
+var ThreeDSpaces = { rev: '1' }; 
 
 ThreeDSpaces.Museum = function(data) {
 
 	if(data === undefined)
 		return;
 
-	console.log("museum");
-	console.log(data.name);
-	console.log(data.floors);
-
 	var rawFloors = data.floors;
 	var floors = [];
+	var objects = [];
 
 	this.generate = function() {
 		for(var i = 0; i < rawFloors.length; i++) {
-			console.log("nb floors" + rawFloors.length);
 			floors.push(new ThreeDSpaces.Floor(rawFloors[i]));
 		}
 	}
@@ -25,6 +21,13 @@ ThreeDSpaces.Museum = function(data) {
 		}
 	}
 
+	this.toObjects = function() {
+		for(var i = 0; i < floors.length; i++) {
+			objects = objects.concat(floors[i].toObjects());
+		}
+		return objects;
+	}
+
 	this.generate();
 }
 
@@ -32,8 +35,6 @@ ThreeDSpaces.Floor = function(data) {
 
 	if(data === undefined)
 		return;
-
-	console.log("floor");
 
 	var rawWalls = data.walls;
 	var rawObjects = data.objects;
@@ -44,6 +45,7 @@ ThreeDSpaces.Floor = function(data) {
 	var walls = [];
 	var models = [];
 	var lights = [];
+	var objects = [];
 
 	var floor_texture, floor_material, floor_mesh;
 
@@ -67,7 +69,14 @@ ThreeDSpaces.Floor = function(data) {
 	}
 
 	this.generateLight = function() {
-
+		for(var i = 0; i < rawLights.length; i++) {
+			var light = new THREE.DirectionalLight(0xffffff, 1);
+            light.position.x = rawLights[i].posX;
+            light.position.y = rawLights[i].posY;
+            light.position.z = rawLights[i].posZ;
+            light.castShadow = true;
+            lights.push(light);
+		}
 	}
 
 	this.generateGround = function() {
@@ -82,7 +91,7 @@ ThreeDSpaces.Floor = function(data) {
 		floor_mesh.position.y = r;//test, en fonction de l'etage
 		floor_mesh.receiveShadow = true;
 	}
-
+                    
 	this.addToScene = function(scene) {
 		for(var i = 0; i < walls.length; i++) {
 			walls[i].addToScene(scene);
@@ -95,6 +104,17 @@ ThreeDSpaces.Floor = function(data) {
 			lights[i].addToScene(scene);
 		}
 		scene.add(floor_mesh);
+	}
+
+	this.toObjects = function() {
+		for(var i = 0; i < walls.length; i++) {
+			objects.push(walls[i]._object());
+		}
+		for(var i = 0; i < models.length; i++) {
+			objects.push(models[i]._object());
+		}
+		objects.push(floor_mesh);
+		return objects;
 	}
 
 	this.generate();
@@ -181,7 +201,7 @@ ThreeDSpaces.Wall = function (data, r) {
 			door_material = new THREE.MeshBasicMaterial({color: 0xffffff});
 			door_mesh = new THREE.Mesh(door_geometry, wall_material);
 			door_mesh.position.x = rawDoors[i].posX;
-			//door_mesh.position.y = rawObject.y;
+			door_mesh.position.y = -(height - rawDoors[i].height)/2;
 			door_mesh.position.z = rawDoors[i].posZ;
 			door_mesh.rotation.y = angle;
 
@@ -237,6 +257,10 @@ ThreeDSpaces.Wall = function (data, r) {
 		scene.add(physiObject);
 	}
 
+	this._object = function() {
+		return physiObject;
+	}
+
 	this.generate(r);
 }
 
@@ -290,6 +314,10 @@ ThreeDSpaces.Model =  function(data, r) {
 		//scene.add(object);
 	}
 
+	this._object = function() {
+		return object;
+	}
+
 	this.generate(r);
 
 }
@@ -317,17 +345,18 @@ ThreeDSpaces.Light =  function(data, r) {
 	}
 
 	this.addToScene = function(scene) {
-
-						//TEST//Spere pour cibler la position du spot light
-		                  var sphereGeometry = new THREE.SphereGeometry( 10, 16, 8 );
-                          var darkMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
-                          var wireframeMaterial = new THREE.MeshBasicMaterial(
-                          { color: 0xff0000, wireframe: true, transparent: false } );
-                          var shape = THREE.SceneUtils.createMultiMaterialObject(
-                          sphereGeometry, [ darkMaterial, wireframeMaterial ] );
-                          shape.position = object.position;
-                          scene.add(shape);
-
+		/**
+		 * TEST
+		 * Sphere pour cibler la position du spot light
+		 */
+		var sphereGeometry = new THREE.SphereGeometry( 10, 16, 8 );
+        var darkMaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } );
+        var wireframeMaterial = new THREE.MeshBasicMaterial(
+        { color: 0xff0000, wireframe: true, transparent: false } );
+        var shape = THREE.SceneUtils.createMultiMaterialObject(
+        sphereGeometry, [ darkMaterial, wireframeMaterial ] );
+        shape.position = object.position;
+        scene.add(shape);
 		scene.add(object);
 	}
 

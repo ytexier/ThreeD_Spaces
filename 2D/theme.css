@@ -1,0 +1,17 @@
+body {
+	padding: 30px;
+}
+
+.floors {
+	padding-top: 30px;
+}
+
+.grid {
+	float: left;
+	width: 70%;
+}
+
+.menu {
+	float: right;
+	width: 30%;
+}

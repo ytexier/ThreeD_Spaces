@@ -1,0 +1,26 @@
+3D
+
+Museum : ok
+
+Floor :
+	ajouter texuture pour le sol = generateGround() - TEST
+	ajouter éclairage = generateLight() - TEST
+	ajouter les données correspondantes dans le json : ground texture, éclairages
+	gérer position de l'étage / hauteur de l'étage
+
+Wall :
+	ajouter fenetres = generateWindows()
+	ajouter peintures = generatePaintings()
+	régler hauteur des portes/fenetres/tableaux
+
+Model : 
+	ajouter model = generate()
+
+Update Library
+
+2D
+
+Murs : Rect extensible
+Parametrer grille : hauteur floor, taille floor, epaisseur sol
+Ajouter lumiere
+Fichier de conf JSON : taille, nom fichier, etc.

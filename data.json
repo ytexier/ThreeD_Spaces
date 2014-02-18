@@ -1,0 +1,62 @@
+{
+	"name": "Museum Test",
+	"floors": [
+		{	"r" : 0,
+			"walls": [
+			{
+				"width": 500,
+				"height": 100,
+				"depth": 20,
+				"posX": 0,
+				"posZ": 250,
+				"angle": 0,
+				"texture": "assets/textures/floor/dark_wood.jpg",
+				"doors": [
+					{
+						"width": 30,
+						"height": 70,
+						"posX": 0,
+						"posZ": 250
+					}
+				],
+				"windows": [
+					{
+						"width": 0,
+						"height": 0,
+						"posX": 0,
+						"posY": 0,
+						"posZ": 0
+					}
+				],
+				"paintings": [
+					{
+						"posX": 0,
+						"posY": 0,
+						"posZ": 0
+					}
+				]
+			},
+			{
+				"width": 500,
+				"height": 100,
+				"depth": 20,
+				"posX": -250,
+				"posZ": 0,
+				"angle": 1.57,
+				"texture": "assets/textures/floor/dark_wood.jpg",
+				"doors": [],
+				"windows": [],
+				"paintings": []
+			}
+		
+		],
+		"objects": [
+			{
+				"posX": "",
+				"posZ": "",
+				"model": ""
+			}
+		]
+	}
+]
+}
