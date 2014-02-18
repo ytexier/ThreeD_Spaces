@@ -75,7 +75,7 @@ DThreeSpaces.Grid = function(container) {
         .style("background","lightgray");
      
 
-    svgGrid.on("click", mouseclick);
+    svgGrid.on("mousedown", mouseclick);
     svgGrid.on("mouseover", mouseOver);
     svgGrid.style("visibility", "hidden");
     svgGrid.style("position", "absolute") 
@@ -137,6 +137,7 @@ DThreeSpaces.Grid = function(container) {
                     .attr("y2", y)
                     .attr("stroke-width", 2)
                     .attr("stroke", "black");
+                    
 
                     firstClick=false;
 
@@ -164,10 +165,18 @@ DThreeSpaces.Grid = function(container) {
         }
     }
 
+    function removeObject() {
+        console.log(this);
+        svgGrid.remove(this);
+    }
+
     function addObject(){
                 var x = d3.mouse(this)[0];
                 var y = d3.mouse(this)[1];
                 console.log(x + " " + y);
+
+                var model = container.getCurrentObject();
+                var object = new DThreeSpaces.Object(x, y, model);
 
                 svgGrid
                     .append("rect")
@@ -177,10 +186,14 @@ DThreeSpaces.Grid = function(container) {
                     .attr("x", d3.mouse(this)[0]-objectWidth/2)
                     .attr("y", d3.mouse(this)[1]-objectHeight/2)
                     .attr("width", objectWidth)
-                    .attr("height", objectHeight);
+                    .attr("height", objectHeight)
+                    .on("dblclick", function() {
+                        this.remove();
+                        objects.splice(objects.indexOf(object), 1);
+                    });
 
-                var model = container.getCurrentObject();
-                objects.push(new DThreeSpaces.Object(x, y, model));
+                
+                objects.push(object);
 
                 svgGrid.selectAll("rect.current").remove();
                 container.setCurrentObject("");

@@ -1,3 +1,5 @@
+3D
+
 Museum : ok
 
 Floor :
@@ -15,3 +17,10 @@ Model :
 	ajouter model = generate()
 
 Update Library
+
+2D
+
+Murs : Rect extensible
+Parametrer grille : hauteur floor, taille floor, epaisseur sol
+Ajouter lumiere
+Fichier de conf JSON : taille, nom fichier, etc.

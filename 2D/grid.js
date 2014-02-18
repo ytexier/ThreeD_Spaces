@@ -1,45 +1,11 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>2D TOPO</title>
-    <style text="text/css">
-      @import url(style.css);
-    </style>
-    <script type="text/javascript" src="assets/lib/d3.min.js"></script>
-    <script type="text/javascript" src="assets/lib/jquery-1.9.0.min.js"></script>
-    <script type="text/javascript" src="DThreeSpaces.js"></script>
-  </head>
-
-    <input type="submit" name="addGrid" value="addGrid" onClick="addGrid()">
-
-    <input type="submit" name="displayJSON" value="displayJSON" onClick="displayJSON()">
-
-    <div id="divRadioGrid"></div>
- 
-    <div id="grid" class="grid"></div>
-    <div id="menu" class="menu">
-      <form>
-        <input type="radio" name="item" value="wall" onChange="selectItem(this.value)">Wall
-        <br>
-        <input type="radio" name="item" value="object" onChange="selectItem(this.value)">Objet
-        <br>
-        <input type="radio" name="item" value="light" onChange="selectItem(this.value)">Light
-      </form>
-    </div>
-
-
-    <div id="listModels" id="listModels"></div>
-
-    <script type="text/javascript">
-
-      var container = new DThreeSpaces.Container("Museum Test");
+var container = new DThreeSpaces.Container("Museum Test");
 
       /**
        * set grid visibility depending on option checked or not
        */
       function visibility(){
-        var radio = d3.selectAll("input[name=radioGird]")
+        console.log("click")
+        var radio = d3.selectAll("button[id=floor_button]")
         .each(function(d){ 
           if(d3.select(this).node().checked == true){
             container.setCurrentGrid(this.value);
@@ -53,18 +19,23 @@
       /**
        * Make a new input radio and its floor(gird) matched
        */
+      /**
+       * Ajouter bouton avant ?
+       */
       function addGrid(){
-        var div = d3.select("div[id=divRadioGrid]")
-        .append("label")
-        .text("floor "+ container.getLength())
-        .append("input")
+        console.log("add grid");
+        var div = d3.select("div[id=floors]")
+        .select("p")
+        .append("button")
         .attr({
-          type: "radio",
-          class: "radioGird",
-          name: "radioGird",
-          onChange: "visibility()",
+          type: "button",
+          class: "btn btn-xs btn-default",
+          name: "button",
+          id: "floor_button",
+          onClick: "visibility()",
           value: function() {return container.getLength();}
-        });
+        })
+        .text("R" + container.getLength());
         container.addGrid(new DThreeSpaces.Grid());
       }
 
@@ -118,8 +89,3 @@
         var div = d3.select("div[id=listModels]")
         .html("");
       }
-
-    </script>
-
-  </body>
-</html>
