@@ -15,3 +15,8 @@ Model :
 	ajouter model = generate()
 
 Update Library
+
+
+
+2D:
+	- faire le drag des walls _ inprogress
