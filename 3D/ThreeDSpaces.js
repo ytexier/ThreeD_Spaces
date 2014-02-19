@@ -150,6 +150,7 @@ ThreeDSpaces.Wall = function (data, r) {
 
 	var angle = data.angle;
 	var texture = data.texture;
+	console.log(texture);
 
 	var rawDoors = data.doors;
 	var rawWindows = data.windows;

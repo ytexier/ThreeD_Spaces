@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+
+    <title>ThreeD Spaces</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="bootstrap/css/bootstrap-theme.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <style text="text/css">
+      @import url(theme.css);
+    </style>
+
+    <!-- Just for debugging purposes. Don't actually copy this line! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body role="document">
+
+    <!-- Fixed navbar -->
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">ThreeD Spaces</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active">
+              <a href="#" id="2d_mode" onClick="nav_bar('2d_mode')">2D</a>
+            </li>
+            <li>
+              <a href="#" id="wanaplan_mode" onClick="nav_bar('wanaplan_mode')">Wanaplan</a>
+            </li>
+            <li>
+              <a href="#" id="3d_mode" onClick="nav_bar('3d_mode')">3D</a>
+            </li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </div>
+
+
+    <div id="2d">
+    <div class="container theme-showcase" id="container" role="main">
+    
+
+      <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div id="jumbotron" class="jumbotron">
+        <h1>ThreeD Spaces</h1>
+        <p>Interface de topographie. Blablabla</p>
+        <p><a href="#" class="btn btn-primary btn-lg" role="button" onClick="$('#jumbotron').hide()">Hide &raquo;</a></p>
+      </div>
+
+      <div id="floors" class="floors">
+        <p>
+          <!-- <button type="button" class="btn btn-xs btn-default">R0</button> -->
+          <button type="button" class="btn btn-xs btn-info" name="add" onClick="addGrid()">+1</button>
+          <button type="button" class="btn btn-xs btn-danger" name="remove" onClick="">-1</button>
+        </p>
+      </div>
+
+      <div id="grid" class="grid"></div>
+
+      <div class="menu">
+    <div class="panel-heading">
+      <h3>Navigation</h3>
+
+    </div>
+    <div id="sidebar" class="list-group"> 
+
+      <a href="#" class="list-group-item active" value="wall" onClick="selectItem('wall')">
+        <i class="icon-dashboard"></i> Wall
+      </a>
+
+      <a href="#" class="list-group-item" value="object" id="object" data-parent="#sidebar" onClick="selectItem('object')">
+        <i class="icon-group"></i> Models
+      </a>
+
+      <div id="objects_collapse" class="list-group subitem collapse"></div>  
+
+      <a href="#articles" class="list-group-item"  data-parent="#sidebar">
+        <i class="icon-file-text"></i> Lights
+        <span class="badge bg_danger">0</span>
+      </a>
+
+      <div id="articles" class="list-group subitem collapse"> 
+
+        <a href="#" class="list-group-item bg_warning">
+          <i class="icon-caret-right"></i> Articles
+          <span class="badge bg_danger">0</span>
+        </a>
+
+        <a href="#" class="list-group-item">
+          <i class="icon-caret-right"></i> Create Article
+        </a>
+
+      </div>
+
+    </div>
+  </div>
+
+  </div>
+
+  <div id="wanaplan"></div>
+
+
+  </div> <!-- /container -->
+
+    <div id="blocker">
+      <div id="instructions">
+        <span style="font-size:40px">Click to visit</span>
+        <br />
+          (Z, S, Q, D = Move, SPACE = Jump, E = Fly, MOUSE = Look around)
+      </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="2D/assets/lib/d3.min.js"></script>
+    <script type="text/javascript" src="2D/DThreeSpaces.js"></script>
+    <script src="2D/grid.js"></script>
+    <script type="text/javascript" src="3D/assets/lib/jquery-1.9.0.min.js"></script>
+    <script type="text/javascript" src="3D/assets/lib/three.min.js"></script>
+    <script type="text/javascript" src="3D/assets/lib/physi.js"></script>
+    <script type="text/javascript" src="3D/assets/js/controls/PointerLockControls.js"></script>
+    <script type="text/javascript" src="3D/assets/lib/ThreeCSG.js"></script>
+    <script type="text/javascript" src="3D/assets/lib/csg.js"></script>
+    <script type="text/javascript" src="3D/assets/js/loaders/ColladaLoader.js"></script>
+    <script type="text/javascript" src="3D/ThreeDSpaces.js"></script>
+    <script type="text/javascript" src="3D/show.js"></script>
+    
+    <script type="text/javascript">
+      //var scene = new Physijs.Scene;
+      var mode = "2d_mode";
+
+      $("#blocker").remove();
+      $("#wanaplan").hide();
+
+      function nav_bar(id) {
+        console.log(id);
+        if(id != mode) {
+          switch(id) {
+          case "2d_mode":
+            mode = "2d_mode";
+            $("#2d").show();
+            $("#blocker").hide();
+            $("#wanaplan").hide();
+          break;
+          case "wanaplan_mode":
+            mode = "wanaplan_mode";
+            $("#2d").hide();
+            $("#blocker").hide();
+            $("#wanaplan").show();
+          break;
+          case "3d_mode":
+            mode = "3d_mode";
+            $("#2d").hide();
+            $("#blocker").show();
+            $("#wanaplan").hide();
+          break;
+          }
+        }
+      }
+
+
+      $('#sidebar > a').on('click', function (e) {
+        e.preventDefault();
+        if(!$(this).hasClass("active")){
+            var lastActive = $(this).closest("#sidebar").children(".active");
+            lastActive.removeClass("active");
+            lastActive.next('div').collapse('hide');
+            $(this).addClass("active");
+            $(this).next('div').collapse('show');
+          }
+      });
+
+      $.getJSON(
+        "2D/models.json",
+        function(data) {
+          $(data).each(function (i) {
+            var callback = "selectObject('"+data[i].path+"')";
+            var div = d3.select("div[id=objects_collapse]")
+            .append("a")
+            .text(data[i].name)
+            .attr({
+              href: "#",
+              class: "list-group-item",
+              value: data[i].path,
+              onClick: callback
+              });
+            });
+          var badge = d3.select("a[id=object]")
+            .append("span")
+            .text(data.length)
+            .attr({
+              class: "badge bg_danger"
+            });
+          });
+
+    </script>
+  </body>
+</html>

@@ -7,7 +7,7 @@
  */
 
 'use strict';
-Physijs.scripts.worker = 'assets/lib/physijs_worker.js';
+Physijs.scripts.worker = '3D/assets/lib/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 var initScene;
@@ -21,7 +21,8 @@ initScene = function(data) {
     renderer.setClearColor(0xffffff);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    document.body.appendChild(renderer.domElement);
+    $("#blocker").append(renderer.domElement);
+    //document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize, false);
     
@@ -58,7 +59,7 @@ initScene = function(data) {
     animate();
   };
 
-window.onload = load_objects('data.json');
+window.onload = load_objects('3D/data.json');
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.

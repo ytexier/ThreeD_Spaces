@@ -6,7 +6,7 @@
 			"width": 2000,
 			"height": 2000,
 			"depth": 10,
-			"texture": "assets/textures/floor/classic_wood.jpg",
+			"texture": "3D/assets/textures/floor/classic_wood.jpg",
 			"walls": [
 				{
 					"width": 1000,
@@ -15,7 +15,7 @@
 					"posX": 0,
 					"posZ": 250,
 					"angle": 0,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [
 						{
 							"width": 30,
@@ -48,7 +48,7 @@
 					"posX": -450,
 					"posZ": 0,
 					"angle": 1.57,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [],
 					"windows": [],
 					"paintings": []
@@ -60,7 +60,7 @@
 					"posX": 250,
 					"posZ": 50,
 					"angle": 1.57,
-					"texture": "assets/textures/floor/white_wood.jpg",
+					"texture": "3D/assets/textures/floor/white_wood.jpg",
 					"doors": [],
 					"windows": [],
 					"paintings": []
@@ -72,7 +72,7 @@
 					"posX": 500,
 					"posZ": 0,
 					"angle": 1.57,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [],
 					"windows": [],
 					"paintings": []
@@ -82,42 +82,42 @@
 				{
 					"posX": 100,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 100,
 					"posZ": -50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 300,
 					"posZ": -50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 300,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": -300,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": -300,
 					"posZ": -50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 200,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 200,
 					"posZ": -50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				}
 			],
 			"lights": [
@@ -138,7 +138,7 @@
 			"width": 1000,
 			"height": 1000,
 			"depth": 10,
-			"texture": "assets/textures/floor/classic_wood.jpg",
+			"texture": "3D/assets/textures/floor/classic_wood.jpg",
 			"walls": [
 				{
 					"width": 500,
@@ -147,7 +147,7 @@
 					"posX": 30,
 					"posZ": 150,
 					"angle": 0,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [
 						{
 							"width": 30,
@@ -180,7 +180,7 @@
 					"posX": 250,
 					"posZ": 40,
 					"angle": 1.57,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [],
 					"windows": [],
 					"paintings": []
@@ -191,12 +191,12 @@
 				{
 					"posX": 10,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": 100,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				}
 			],
 			"lights": [
@@ -217,7 +217,7 @@
 			"width": 500,
 			"height": 500,
 			"depth": 30,
-			"texture": "assets/textures/floor/classic_wood.jpg",
+			"texture": "3D/assets/textures/floor/classic_wood.jpg",
 			"walls": [
 				{
 					"width": 200,
@@ -226,7 +226,7 @@
 					"posX": -10,
 					"posZ": 250,
 					"angle": 0,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [
 						{
 							"width": 30,
@@ -259,7 +259,7 @@
 					"posX": 50,
 					"posZ": 100,
 					"angle": 1.57,
-					"texture": "assets/textures/floor/dark_wood.jpg",
+					"texture": "3D/assets/textures/floor/dark_wood.jpg",
 					"doors": [],
 					"windows": [],
 					"paintings": []
@@ -269,12 +269,12 @@
 				{
 					"posX": 10,
 					"posZ": -50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				},
 				{
 					"posX": -100,
 					"posZ": 50,
-					"model": "assets/models/table.dae"
+					"model": "3D/assets/models/table.dae"
 				}
 			],
 			"lights": [
