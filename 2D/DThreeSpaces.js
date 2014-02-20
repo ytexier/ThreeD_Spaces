@@ -62,6 +62,7 @@ DThreeSpaces.Grid = function(container) {
     var walls = [];
     var objects = [];
     var floors = [];
+    var painting = [];
 
     var depth = 2;
 
@@ -184,6 +185,9 @@ DThreeSpaces.Grid = function(container) {
         console.log("painting added !");
     }
 
+    var firstClickX;
+    var firstClickY;
+
     /**
      * create a wall with all events linked
      *     -mousemove : checkBounds function, used to link others walls easily.
@@ -195,8 +199,7 @@ DThreeSpaces.Grid = function(container) {
      */
     function addWall(x,y){
 
-                var firstClickX;
-                var firstClickY;
+
 
                 var wall = new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y);
 
@@ -305,10 +308,11 @@ DThreeSpaces.Grid = function(container) {
                                 objects.splice(objects.indexOf(selected), 1); 
                             })
                             .on("drag", function(d) {
-                                d3.select(this)
+                                var selected = d3.select(this)
                                     .attr("x", d3.mouse(this)[0]-objectWidth/2)
                                     .attr("y", d3.mouse(this)[1]-objectHeight/2);
-                            })
+
+                             })
                             .on("dragend", function(d) {
                                 var selected = d3.select(this)
                                     .style("stroke","green"); 
@@ -322,6 +326,36 @@ DThreeSpaces.Grid = function(container) {
                 svgGrid.selectAll("rect.current").remove();
                 container.setCurrentObject("");
                 firstMouseOver=true;
+    }
+
+    function addPainting(){
+    }
+
+    function checkCollides(item){
+        var res = false;
+        svgGrid
+            .selectAll("line.added")
+            .each(function(){
+
+                var selected = d3.select(this);
+                var x1 = selected.attr("x1");
+                var x2 = selected.attr("x2");
+                var y1 = selected.attr("y1");
+                var y2 = selected.attr("y2");
+
+                var m = (y2 - y1) / (x2 - x1);
+                var p = y1 - (m * x1);
+
+                if(
+                    (parseInt(item.attr("y1")) == parseInt(( m * item.attr("x1") + p)))
+                    ||
+                    (parseInt(item.attr("y2")) == parseInt(( m * item.attr("x2") + p)))
+                )
+                    alert("COLLISION!!!!");
+
+
+            });
+        return res;
     }
 
     /**
@@ -451,6 +485,57 @@ DThreeSpaces.Grid = function(container) {
                         .attr("x", x-objectWidth/2)
                         .attr("y", y-objectHeight/2);
                 }
+
+                break;
+
+            case "painting":
+
+                if(firstMouseOver){
+                    svgGrid
+                        .append("line")
+                        .style("stroke","red")
+                        .attr("stroke-width", 3)
+                        .attr("class", "current")
+                        .attr("x1", x+30)
+                        .attr("y1", y+30)
+                        .attr("x2", x-30)
+                        .attr("y2", y-30)
+                        .attr("stroke-width", 10)
+                        .on("click", addPainting)
+                        .on("mousemove", mouseMoveToGrid);
+
+                        firstClickX=x;
+                        firstClickY=y;
+
+                    firstMouseOver = false;
+                }else{
+
+                        var select = svgGrid.selectAll("line.current")
+                        var x1 = select.attr("x1");
+                        var x2 = select.attr("x2");
+                        var y1 = select.attr("y1");
+                        var y2 = select.attr("y2");
+
+                        x1 -= (firstClickX-x);
+                        x2 -= (firstClickX-x);
+                        y1 -= (firstClickY-y);
+                        y2 -= (firstClickY-y);
+
+                                
+                        svgGrid
+                            .selectAll("line.current")
+                            .attr("x1", x1)
+                            .attr("y1", y1)
+                            .attr("x2", x2)
+                            .attr("y2", y2);
+
+                        firstClickX=x;
+                        firstClickY=y;
+
+                        checkCollides(select);//SO DIRTY
+
+                  }
+
 
                 break;
 
