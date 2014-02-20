@@ -7,7 +7,7 @@
  */
 
 'use strict';
-Physijs.scripts.worker = '3D/assets/lib/physijs_worker.js';
+Physijs.scripts.worker = 'assets/lib/physijs_worker.js';
 Physijs.scripts.ammo = 'ammo.js';
 
 var initScene;
@@ -21,8 +21,7 @@ initScene = function(data) {
     renderer.setClearColor(0xffffff);
     renderer.setSize(window.innerWidth, window.innerHeight);
 
-    $("#blocker").append(renderer.domElement);
-    //document.body.appendChild(renderer.domElement);
+    document.body.appendChild(renderer.domElement);
 
     window.addEventListener('resize', onWindowResize, false);
     
@@ -59,7 +58,9 @@ initScene = function(data) {
     animate();
   };
 
-window.onload = load_objects('3D/data.json');
+
+window.onload = load_objects('data.json');
+//window.onload = load_localStorage();
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.
@@ -96,6 +97,12 @@ function load_objects(path) {
     pointer_lock_check();
     initScene(data);
   });
+}
+
+function load_localStorage() {
+  pointer_lock_check();
+  console.log(window.localStorage.getItem("data"));
+  initScene(window.localStorage.getItem("data"));
 }
 
 /**

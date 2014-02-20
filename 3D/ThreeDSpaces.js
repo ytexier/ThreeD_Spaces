@@ -150,11 +150,12 @@ ThreeDSpaces.Wall = function (data, r) {
 
 	var angle = data.angle;
 	var texture = data.texture;
-	console.log(texture);
 
 	var rawDoors = data.doors;
 	var rawWindows = data.windows;
 	var rawPaintings = data.paintings;
+
+	var paintings = [];
 
 	/**
 	 * [generate description]
@@ -234,7 +235,18 @@ ThreeDSpaces.Wall = function (data, r) {
 	 * @return {[type]}           [description]
 	 */
 	this.generate_paintings = function(paintings) {
+		for(var i = 0; i < rawPaintings.length; i++) {
+			var painting_geometry = new THREE.PlaneGeometry(rawPaintings[i].width, rawPaintings[i].height);
+			var painting_texture = new THREE.ImageUtils.loadTexture(rawPaintings[i].texture);
+			var painting_material = new THREE.MeshBasicMaterial({color: 0xffffff, map: painting_texture});
 
+			var painting_mesh = new THREE.Mesh(painting_geometry, painting_material);
+			painting_mesh.position.x = rawPaintings[i].posX;
+			painting_mesh.position.y = rawPaintings[i].posY;
+			painting_mesh.position.z = rawPaintings[i].posZ;
+
+			paintings.push(painting_mesh);
+		}
 	}
 
 	/**
@@ -256,6 +268,9 @@ ThreeDSpaces.Wall = function (data, r) {
 
 	this.addToScene = function(scene) {
 		scene.add(physiObject);
+		for(var i = 0; i < paintings.length; i++) {
+			//scene.add(paintings[i]);
+		}
 	}
 
 	this._object = function() {
@@ -263,6 +278,7 @@ ThreeDSpaces.Wall = function (data, r) {
 	}
 
 	this.generate(r);
+	//this.generate_paintings();
 }
 
 ThreeDSpaces.Model =  function(data, r) {

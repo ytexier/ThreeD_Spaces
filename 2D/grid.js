@@ -26,7 +26,6 @@ var container = new DThreeSpaces.Container("Museum Test");
        * Ajouter bouton avant ?
        */
       function addGrid(){
-        console.log("add grid");
         var div = d3.select("div[id=floors]")
         .select("p")
         .append("button")
@@ -68,6 +67,10 @@ var container = new DThreeSpaces.Container("Museum Test");
 
       function displayJSON(){
         alert(container.toJson());
+      }
+
+      function getJSON() {
+        return container.toJson();
       }
 
       function resetListModels(){

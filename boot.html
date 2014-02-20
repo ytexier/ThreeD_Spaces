@@ -54,7 +54,7 @@
               <a href="#" id="wanaplan_mode" onClick="nav_bar('wanaplan_mode')">Wanaplan</a>
             </li>
             <li>
-              <a href="#" id="3d_mode" onClick="nav_bar('3d_mode')">3D</a>
+              <a href="#" id="3d_mode" onClick="switch_3d()">3D</a>
             </li>
           </ul>
         </div><!--/.nav-collapse -->
@@ -62,9 +62,9 @@
     </div>
 
 
-    <div id="2d">
-    <div class="container theme-showcase" id="container" role="main">
     
+    <div class="container theme-showcase" id="container" role="main">
+    <div id="2d">
 
       <!-- Main jumbotron for a primary marketing message or call to action -->
       <div id="jumbotron" class="jumbotron">
@@ -125,41 +125,35 @@
 
   <div id="wanaplan"></div>
 
+  <div id="3d">
+    <!-- Main jumbotron for a primary marketing message or call to action -->
+      <div id="jumbotron_3d" class="jumbotron">
+        <h1>ThreeD Spaces</h1>
+        <p>3d blablabla. Click to popup</p>
+        <p><a href="#" class="btn btn-primary btn-lg" role="button" onClick="window.open('3D/web_gl.html')">Hide &raquo;</a></p>
+      </div>
+  </div>
+
 
   </div> <!-- /container -->
 
-    <div id="blocker">
-      <div id="instructions">
-        <span style="font-size:40px">Click to visit</span>
-        <br />
-          (Z, S, Q, D = Move, SPACE = Jump, E = Fly, MOUSE = Look around)
-      </div>
-    </div>
+    
 
 
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="bootstrap/js/jquery-1.9.0.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="2D/assets/lib/d3.min.js"></script>
     <script type="text/javascript" src="2D/DThreeSpaces.js"></script>
     <script src="2D/grid.js"></script>
-    <script type="text/javascript" src="3D/assets/lib/jquery-1.9.0.min.js"></script>
-    <script type="text/javascript" src="3D/assets/lib/three.min.js"></script>
-    <script type="text/javascript" src="3D/assets/lib/physi.js"></script>
-    <script type="text/javascript" src="3D/assets/js/controls/PointerLockControls.js"></script>
-    <script type="text/javascript" src="3D/assets/lib/ThreeCSG.js"></script>
-    <script type="text/javascript" src="3D/assets/lib/csg.js"></script>
-    <script type="text/javascript" src="3D/assets/js/loaders/ColladaLoader.js"></script>
-    <script type="text/javascript" src="3D/ThreeDSpaces.js"></script>
-    <script type="text/javascript" src="3D/show.js"></script>
     
     <script type="text/javascript">
       //var scene = new Physijs.Scene;
       var mode = "2d_mode";
 
-      $("#blocker").remove();
+      $("#3d").hide();
       $("#wanaplan").hide();
 
       function nav_bar(id) {
@@ -169,25 +163,29 @@
           case "2d_mode":
             mode = "2d_mode";
             $("#2d").show();
-            $("#blocker").hide();
+            $("#3d").hide();
             $("#wanaplan").hide();
           break;
           case "wanaplan_mode":
             mode = "wanaplan_mode";
             $("#2d").hide();
-            $("#blocker").hide();
+            $("#3d").hide();
             $("#wanaplan").show();
           break;
           case "3d_mode":
             mode = "3d_mode";
             $("#2d").hide();
-            $("#blocker").show();
+            $("#3d").show();
             $("#wanaplan").hide();
           break;
           }
         }
       }
 
+      function switch_3d() {
+        nav_bar("3d_mode");
+        localStorage.setItem("data", getJSON());
+      }
 
       $('#sidebar > a').on('click', function (e) {
         e.preventDefault();
@@ -222,6 +220,12 @@
               class: "badge bg_danger"
             });
           });
+
+      $(document).keyup(function(e) {
+        //cleaning all currentLine, currentRect, currentCircle with keyup escap
+        if (e.keyCode == 27)   
+          container.cleaning();
+      });
 
     </script>
   </body>
