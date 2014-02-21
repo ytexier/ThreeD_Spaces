@@ -68,23 +68,21 @@
           onChange: "visibility()",
           value: function() {return container.getLength();}
         });
-        container.addGrid(800, 500);
+        container.addGrid(700, 500, 2, 50);//width,heigth,depth,r
       }
 
       function selectItem(item){
         switch(item){
-          case "floor":
-            resetListModels();
-            container.setCurrentItem(item);
-            break;
           case "wall":
             resetListModels();
+            resetListPaintings();
             container.setCurrentItem(item);
             break;
           case "object":
+            resetListPaintings();
             container.setCurrentItem(item);
             $.post(
-              "getModels.php",
+              "getObjects.php",
               function(data){
                 $(data).each( function(i){
                   var div = d3.select("div[id=listModels]")  
@@ -107,9 +105,15 @@
 
           case "light":
               resetListModels();
+              resetListPaintings();
+              container.setCurrentItem(item);
+              break;
+
+          case "painting":
+              resetListModels();
               container.setCurrentItem(item);
               $.post(
-                "getModels.php",
+                "getPaintings.php",
                 function(data){
                   $(data).each( function(i){
                     var div = d3.select("div[id=listPaintings]")  
@@ -127,12 +131,7 @@
                   });
                 },
                 'json'
-            );
-              break;
-
-          case "painting":
-              resetListModels();
-              container.setCurrentItem(item);
+              );
               break;
 
           default: console.log("no item selected");
@@ -152,6 +151,12 @@
         var div = d3.select("div[id=listModels]")
         .html("");
       }
+
+      function resetListPaintings(){
+        var div = d3.select("div[id=listPaintings]")
+        .html("");
+      }
+
 
 
     $(document).keyup(function(e) {
