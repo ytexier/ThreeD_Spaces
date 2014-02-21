@@ -1,8 +1,6 @@
 var DThreeSpaces = { rev: '0.1' };
 
-    var widthGrid = 700;
-    var heightGrid = 700; 
-
+var currentGrid
 
 DThreeSpaces.Container = function(name){
 
@@ -18,8 +16,8 @@ DThreeSpaces.Container = function(name){
     this.setHiddenGrid = function(indexGrid){
         grids[indexGrid].setHidden();
     }
-    this.addGrid = function(){
-        grids.push(new DThreeSpaces.Grid(this));
+    this.addGrid = function(width, height){
+        grids.push(new DThreeSpaces.Grid(this, width, height));
     }
     this.getLength = function(){
         return grids.length;
@@ -56,13 +54,15 @@ DThreeSpaces.Container = function(name){
 
 
 
-DThreeSpaces.Grid = function(container) {
+DThreeSpaces.Grid = function(container, widthGrid, heightGrid) {
+
+    var widthGrid = widthGrid;
+    var heightGrid = heightGrid;
 
     var container = container;
     var walls = [];
     var objects = [];
-    var floors = [];
-    var painting = [];
+    var paintings = [];
 
     var depth = 2;
 
@@ -74,6 +74,8 @@ DThreeSpaces.Grid = function(container) {
     var objectHeight = 40;
 
     var isAfterDrag = false;  
+
+    var widthPainting=60;
 
 	/*
     * Set with and heigh of the SVG canvas
@@ -180,8 +182,9 @@ DThreeSpaces.Grid = function(container) {
             firstClick=false;
     }
 
-    function addPainting(x, y){
-
+    function addPainting(x, y, angle){
+        var painting = new DThreeSpaces.Painting(x, y, angle);
+        paintings.push(painting);
         console.log("painting added !");
     }
 
@@ -199,8 +202,6 @@ DThreeSpaces.Grid = function(container) {
      */
     function addWall(x,y){
 
-
-
                 var wall = new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y);
 
                 var line = svgGrid.append("line")
@@ -212,6 +213,22 @@ DThreeSpaces.Grid = function(container) {
                     .attr("stroke-width", 10)
                     .style("stroke", "green")
                     .on("mousemove", checkBounds)
+                    .on("click", function(){
+                        var painting = new DThreeSpaces.Painting(x, y, );
+                        paintings.push(painting);
+                        console.log("painting added !");   
+
+                        wall.addPainting(x, y);
+                        var selected = d3.select(this);
+                        walls.splice(objects.indexOf(selected), 1); 
+                        walls.push(new DThreeSpaces.Wall(selected.attr("x1"), selected.attr("y1"), selected.attr("x2"), selected.attr("y2")));
+                        svgGrid.append("circle")
+                            .attr("class", "added")
+                            .attr("cx", d3.mouse(this)[0])
+                            .attr("cy", d3.mouse(this)[1])
+                            .attr("r", 5)
+                            .attr("stroke-width", 3).style("stroke", "lightgreen");
+                    })
                     .on("dblclick", function() {
                         this.remove();
                         walls.splice(walls.indexOf(wall), 1);
@@ -219,6 +236,8 @@ DThreeSpaces.Grid = function(container) {
                     .call(
                         d3.behavior.drag()
                             .on("dragstart", function(d) {
+                                if(container.getCurrentItem()!="wall")
+                                    return;
                                 isAfterDrag = true;
                                 var selected = d3.select(this);
                                 walls.splice(objects.indexOf(selected), 1); 
@@ -273,6 +292,7 @@ DThreeSpaces.Grid = function(container) {
                 console.log("wall added !");
     }
 
+
     /**
      * add a object model with all events linked
      *     -dblclick : used to remove it
@@ -302,6 +322,8 @@ DThreeSpaces.Grid = function(container) {
                     .call(
                         d3.behavior.drag()
                             .on("dragstart", function(d) {
+                                if(container.getCurrentItem()!="object")
+                                    return;
                                 isAfterDrag = true;
                                 var selected = d3.select(this)
                                     .style("stroke","blue");
@@ -329,9 +351,16 @@ DThreeSpaces.Grid = function(container) {
     }
 
     function addPainting(){
+        var x = d3.mouse(this)[0];
+        var y = d3.mouse(this)[1];
     }
 
+
+
     function checkCollides(item){
+
+        
+
         var res = false;
         svgGrid
             .selectAll("line.added")
@@ -351,7 +380,7 @@ DThreeSpaces.Grid = function(container) {
                     ||
                     (parseInt(item.attr("y2")) == parseInt(( m * item.attr("x2") + p)))
                 )
-                    alert("COLLISION!!!!");
+                    console.log("collision");
 
 
             });
@@ -496,10 +525,10 @@ DThreeSpaces.Grid = function(container) {
                         .style("stroke","red")
                         .attr("stroke-width", 3)
                         .attr("class", "current")
-                        .attr("x1", x+30)
-                        .attr("y1", y+30)
-                        .attr("x2", x-30)
-                        .attr("y2", y-30)
+                        .attr("x1", x-(widthPainting/2))
+                        .attr("y1", y)
+                        .attr("x2", x+(widthPainting/2))
+                        .attr("y2", y)
                         .attr("stroke-width", 10)
                         .on("click", addPainting)
                         .on("mousemove", mouseMoveToGrid);
@@ -585,6 +614,7 @@ function getTruePositions(x, y){
 }
 
 DThreeSpaces.Wall = function(x1, y1, x2, y2) {
+    var paintings = [];
 
     var x1 = x1;
     var y1 = y1;
@@ -596,31 +626,48 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2) {
 
     var angle = Math.atan2(xy1[1] - xy2[1], xy1[0] - xy2[0]);
 
+    this.addPainting = function(x, y){
+        var painting = new DThreeSpaces.Painting(x, y);
+        paintings.push(painting);
+        console.log("painting added !");      
+    }
+
     this.toJson = function() {
+        /*
+        var json = "{ width:"+widthGrid+",height:"+heightGrid+",depth:"+depth;
+        if(walls.length>0){
+            json += ", walls: [";
+            for(var i=0; i<walls.length; i++){
+                json += walls[i].toJson().concat(",");
+            }
+            json = json.slice(0, json.lastIndexOf(",")).concat("]");
+        }
+        */
         return "{x1:"+xy1[0]+",y1:"+xy1[1]+",x2:"+xy2[0]+",y2:"+xy2[1]+",angle:"+angle+"}";
     }
 }
 
 
-DThreeSpaces.Object = function(x, y, model) {
+DThreeSpaces.Object = function(x, y, angle, model) {
     var x = x;
     var y = y;
+    var angle = angle;
+    var model = model;
         var xy = getTruePositions(x, y);
 
-    var model = model;
     this.toJson = function() {
         return "{x:"+xy[0]+",z:"+xy[1]+",model:"+model+"}";
     }
 }
 
-DThreeSpaces.Painting = function(x, y, angle) {
+DThreeSpaces.Painting = function(x, y, angle, model) {
     var x = x;
     var y = y;
         var xy = getTruePositions(x, y);
 
     var angle = angle;
     this.toJson = function() {
-        return "{x:"+xy[0]+",z:"+xy[1]+",model:"+model+"}";
+        return "{x:"+xy[0]+",z:"+xy[1]+"}";
     }
 }
 

@@ -32,6 +32,7 @@
 
 
     <div id="listModels" id="listModels"></div>
+    <div id="listPaintings" id="listPaintings"></div>
 
     <script type="text/javascript">
 
@@ -67,7 +68,7 @@
           onChange: "visibility()",
           value: function() {return container.getLength();}
         });
-        container.addGrid(new DThreeSpaces.Grid());
+        container.addGrid(800, 500);
       }
 
       function selectItem(item){
@@ -107,6 +108,26 @@
           case "light":
               resetListModels();
               container.setCurrentItem(item);
+              $.post(
+                "getModels.php",
+                function(data){
+                  $(data).each( function(i){
+                    var div = d3.select("div[id=listPaintings]")  
+                    .append("ul")
+                    .append("label")
+                    .text(data[i])
+                    .append("input")
+                    .attr({
+                      type: "submit",
+                      class: "radioPainting",
+                      name: "radioPainting",
+                      value: data[i],
+                      onClick:"selectObject(this.value)"
+                    });
+                  });
+                },
+                'json'
+            );
               break;
 
           case "painting":
