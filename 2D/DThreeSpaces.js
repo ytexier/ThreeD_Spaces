@@ -264,14 +264,6 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
                             checkBounds(xMouse, yMouse, xRange, yRange, line);
                     })
-                    .on("click", function(){
-                        if(container.getCurrentItem()!="painting")
-                            return;
-                        var x_ = d3.mouse(this)[0];
-                        var y_ = d3.mouse(this)[1];
-                        currentGrid.addPainting(x_, y_, wall.getAngle(), container.getCurrentObject());
-
-                    })
                     .on("dblclick", function() {
                         this.remove();
                         walls.splice(walls.indexOf(wall), 1);
@@ -329,8 +321,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
    
                 walls.push(wall);
 
-                svgGrid.selectAll("line.current").remove();
-                svgGrid.selectAll("circle.current").remove();
+                currentGrid.cleaning();
                 firstClick=true;
 
                 console.log("wall added !");
@@ -392,8 +383,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
                 
                 objects.push(object);
-
-                svgGrid.selectAll("rect.current").remove();
+                currentGrid.cleaning();
                 container.setCurrentObject("");
                 firstMouseOver=true;
     }
@@ -413,7 +403,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                         d3.behavior.drag()
                             .on("dragstart", function(d) {
                                 var selected = d3.select(this)
-                                    .style("stroke","lightblue");
+                                    .style("stroke","blue");
                             })
                             .on("dragend", function(d) {
                                 var selected = d3.select(this)
@@ -423,6 +413,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
         paintings.push(painting);
         firstMouseOver=true;
         container.setCurrentObject("");
+        currentGrid.cleaning();
         console.log("painting added !");      
     }
 
