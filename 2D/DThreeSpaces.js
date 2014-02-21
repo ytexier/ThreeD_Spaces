@@ -1,5 +1,7 @@
 var DThreeSpaces = { rev: '0.1' };
 
+var WIDTH_MIN_WALL = 15;
+
 var currentGrid ;
 
 var depthWall = 8;
@@ -207,6 +209,14 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     var firstClickY;
     var onWall=false;
 
+    function checkDistanceIsBad(x1,y1,x2,y2){
+        var res=false;
+        var distance = Math.sqrt(Math.pow((x2 - x1),2)+Math.pow((y2 - y1),2)); 
+        if(distance<WIDTH_MIN_WALL)
+            res=true;  
+        return res;
+    }
+
     /**
      * create a wall with all events linked
      *     -mousemove : checkBounds function, used to link others walls easily.
@@ -217,6 +227,9 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
      * @param {float} y mouse position
      */
     function addWall(x,y, depth, height){
+
+                if(checkDistanceIsBad(tempPositions[0], tempPositions[1], x, y))
+                    return;
 
                 var wall = new DThreeSpaces.Wall(tempPositions[0], tempPositions[1], x, y, depth, height);
 
@@ -408,6 +421,8 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                             .on("dragend", function(d) {
                                 var selected = d3.select(this)
                                     .style("stroke","lightgreen"); 
+                                if(container.getCurrentItem()!="painting")
+                                    return alert("drag denied, you need to select construction mode : painting");     
                             })
             );
         paintings.push(painting);
