@@ -40,6 +40,18 @@ body {
   z-index:1;
 } 
 
+#listPaintings {
+  background-color: lightgreen;
+  width: 50%;
+  margin:30px;
+  padding: 0 0px;
+  float:right;
+  text-align: left;
+  position:relative;
+  z-index:1;
+} 
+
+
 #divRadioGrid {
   background-color: lightgreen;
   width: 100%;

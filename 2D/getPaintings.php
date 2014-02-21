@@ -1,6 +1,6 @@
 <?php
 
-    $dir = 'assets/models/';
+    $dir = 'assets/models/paintings/';
     
     if ($handle = opendir($dir)) {
 
