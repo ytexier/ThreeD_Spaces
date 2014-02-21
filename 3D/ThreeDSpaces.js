@@ -235,18 +235,7 @@ ThreeDSpaces.Wall = function (data, r) {
 	 * @return {[type]}           [description]
 	 */
 	this.generate_paintings = function(paintings) {
-		for(var i = 0; i < rawPaintings.length; i++) {
-			var painting_geometry = new THREE.PlaneGeometry(rawPaintings[i].width, rawPaintings[i].height);
-			var painting_texture = new THREE.ImageUtils.loadTexture(rawPaintings[i].texture);
-			var painting_material = new THREE.MeshBasicMaterial({color: 0xffffff, map: painting_texture});
 
-			var painting_mesh = new THREE.Mesh(painting_geometry, painting_material);
-			painting_mesh.position.x = rawPaintings[i].posX;
-			painting_mesh.position.y = rawPaintings[i].posY;
-			painting_mesh.position.z = rawPaintings[i].posZ;
-
-			paintings.push(painting_mesh);
-		}
 	}
 
 	/**
@@ -268,9 +257,6 @@ ThreeDSpaces.Wall = function (data, r) {
 
 	this.addToScene = function(scene) {
 		scene.add(physiObject);
-		for(var i = 0; i < paintings.length; i++) {
-			//scene.add(paintings[i]);
-		}
 	}
 
 	this._object = function() {
@@ -278,9 +264,13 @@ ThreeDSpaces.Wall = function (data, r) {
 	}
 
 	this.generate(r);
-	//this.generate_paintings();
 }
 
+/**
+ * Scuptures & Painting generation
+ * @param {[type]} data [description]
+ * @param {[type]} r    [description]
+ */
 ThreeDSpaces.Model =  function(data, r) {
 
 	if(data === undefined)
@@ -311,19 +301,6 @@ ThreeDSpaces.Model =  function(data, r) {
             object.castShadow = true;
             scene.add(object);
         });
-
-/*
-		loader.load(model, function (collada) {
-            object = collada.scene;
-            object.scale.x = object.scale.y = object.scale.z =  1;
-            object.updateMatrix();
-            object.rotation.x = -Math.PI / 2;
-            object.position.y = r;
-            object.position.z = posZ;
-            object.position.x = posX;
-            object.receiveShadow = true;//need that to cast shadow
-		});
-*/
 
 	}
 

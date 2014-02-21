@@ -101,8 +101,8 @@ function load_objects(path) {
 
 function load_localStorage() {
   pointer_lock_check();
-  console.log(window.localStorage.getItem("data"));
-  initScene(window.localStorage.getItem("data"));
+  //console.log(window.localStorage.getItem("data"));
+  //initScene(window.localStorage.getItem("data"));
 }
 
 /**
