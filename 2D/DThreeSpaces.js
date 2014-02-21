@@ -237,7 +237,8 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
                             })
                             .on("drag", function(d) {
-
+                                if(container.getCurrentItem()!="wall")
+                                    return;
                                 var select = d3.select(this);
 
                                 var x1 = select.attr("x1");
@@ -265,6 +266,8 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                        
                             })
                             .on("dragend", function(d) {
+                                if(container.getCurrentItem()!="wall")
+                                    return;
                                 var selected = d3.select(this)
                                     .style("stroke","green"); 
                                 walls.push(new DThreeSpaces.Wall(selected.attr("x1"), selected.attr("y1"), selected.attr("x2"), selected.attr("y2"), wall.getDepth(), wall.getHeigth()));
@@ -318,12 +321,16 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                                 objects.splice(objects.indexOf(selected), 1); 
                             })
                             .on("drag", function(d) {
+                                if(container.getCurrentItem()!="object")
+                                    return;                                
                                 var selected = d3.select(this)
                                     .attr("x", d3.mouse(this)[0]-objectWidth/2)
                                     .attr("y", d3.mouse(this)[1]-objectHeight/2);
 
                              })
                             .on("dragend", function(d) {
+                                if(container.getCurrentItem()!="object")
+                                    return;                               
                                 var selected = d3.select(this)
                                     .style("stroke","green"); 
                                 objects.push(new DThreeSpaces.Object(selected.attr("x"), selected.attr("y"), model));     
