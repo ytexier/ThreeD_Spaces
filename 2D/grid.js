@@ -3,14 +3,17 @@ var container = new DThreeSpaces.Container("Museum Test");
       /**
        * set grid visibility depending on option checked or not
        */
-      function visibility(){
-        console.log("click")
-        var radio = d3.selectAll("button[id=floor_button]")
+      function visibility(id){
+        console.log(id)
+        var clicked_class = d3.select("#"+id).attr("class");
+        var radio = d3.selectAll("button[name=floor_button]")
         .each(function(d){ 
-          if(d3.select(this).node().checked == true){
+          if(d3.select(this).attr("id") === id){
+            d3.select(this).attr("class", clicked_class + " active");
             container.setCurrentGrid(this.value);
             container.setVisibleGrid(this.value);
           }else {
+            d3.select(this).attr("class", clicked_class);
             container.setHiddenGrid(this.value);
           }
         });
@@ -23,16 +26,15 @@ var container = new DThreeSpaces.Container("Museum Test");
        * Ajouter bouton avant ?
        */
       function addGrid(){
-        console.log("add grid");
         var div = d3.select("div[id=floors]")
         .select("p")
         .append("button")
         .attr({
           type: "button",
           class: "btn btn-xs btn-default",
-          name: "button",
-          id: "floor_button",
-          onClick: "visibility()",
+          name: "floor_button",
+          id: "floor_button"+container.getLength(),
+          onClick: "visibility(this.id)",
           value: function() {return container.getLength();}
         })
         .text("R" + container.getLength());
@@ -40,6 +42,7 @@ var container = new DThreeSpaces.Container("Museum Test");
       }
 
       function selectItem(item){
+        console.log(item);
         switch(item){
           case "floor":
             resetListModels();
@@ -51,26 +54,6 @@ var container = new DThreeSpaces.Container("Museum Test");
             break;
           case "object":
             container.setCurrentItem(item);
-            $.post(
-              "getModels.php",
-              function(data){
-                $(data).each( function(i){
-                  var div = d3.select("div[id=listModels]")  
-                  .append("ul")
-                  .append("label")
-                  .text(data[i])
-                  .append("input")
-                  .attr({
-                    type: "submit",
-                    class: "radioModel",
-                    name: "radioModel",
-                    value: data[i],
-                    onClick:"selectObject(this.value)"
-                  });
-                });
-              },
-              'json'
-            );
             break;
           default: console.log("no item selected");
         }
@@ -78,11 +61,16 @@ var container = new DThreeSpaces.Container("Museum Test");
 
 
       function selectObject(model){
+        console.log(model);
         container.setCurrentObject(model);
       }
 
       function displayJSON(){
         alert(container.toJson());
+      }
+
+      function getJSON() {
+        return container.toJson();
       }
 
       function resetListModels(){

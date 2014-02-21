@@ -155,6 +155,8 @@ ThreeDSpaces.Wall = function (data, r) {
 	var rawWindows = data.windows;
 	var rawPaintings = data.paintings;
 
+	var paintings = [];
+
 	/**
 	 * [generate description]
 	 * @return {[type]} [description]
@@ -264,6 +266,11 @@ ThreeDSpaces.Wall = function (data, r) {
 	this.generate(r);
 }
 
+/**
+ * Scuptures & Painting generation
+ * @param {[type]} data [description]
+ * @param {[type]} r    [description]
+ */
 ThreeDSpaces.Model =  function(data, r) {
 
 	if(data === undefined)
@@ -294,19 +301,6 @@ ThreeDSpaces.Model =  function(data, r) {
             object.castShadow = true;
             scene.add(object);
         });
-
-/*
-		loader.load(model, function (collada) {
-            object = collada.scene;
-            object.scale.x = object.scale.y = object.scale.z =  1;
-            object.updateMatrix();
-            object.rotation.x = -Math.PI / 2;
-            object.position.y = r;
-            object.position.z = posZ;
-            object.position.x = posX;
-            object.receiveShadow = true;//need that to cast shadow
-		});
-*/
 
 	}
 

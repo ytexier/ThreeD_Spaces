@@ -32,13 +32,6 @@
 							"posY": 0,
 							"posZ": 0
 						}
-					],
-					"paintings": [
-						{
-							"posX": 0,
-							"posY": 0,
-							"posZ": 0
-						}
 					]
 				},
 				{
@@ -131,6 +124,13 @@
 					"posZ": 150,
 					"height": 50
 				}
+			],
+			"paintings": [
+				{
+					"posX": 100,
+					"posZ": 50,
+					"model": "assets/models/Paris-PontNeuf.dae"
+				}
 			]
 		},
 		{	
@@ -160,13 +160,6 @@
 						{
 							"width": 0,
 							"height": 0,
-							"posX": 0,
-							"posY": 0,
-							"posZ": 0
-						}
-					],
-					"paintings": [
-						{
 							"posX": 0,
 							"posY": 0,
 							"posZ": 0
@@ -210,6 +203,13 @@
 					"posZ": -150,
 					"height": 10
 				}
+			],
+			"paintings": [
+				{
+					"posX": 100,
+					"posZ": 50,
+					"model": "assets/models/Paris-PontNeuf.dae"
+				}
 			]
 		},
 		{	
@@ -239,13 +239,6 @@
 						{
 							"width": 0,
 							"height": 0,
-							"posX": 0,
-							"posY": 0,
-							"posZ": 0
-						}
-					],
-					"paintings": [
-						{
 							"posX": 0,
 							"posY": 0,
 							"posZ": 0
@@ -287,6 +280,13 @@
 					"posX": 10,
 					"posZ": 150,
 					"height": 150
+				}
+			],
+			"paintings": [
+				{
+					"posX": 100,
+					"posZ": 50,
+					"model": "assets/models/Paris-PontNeuf.dae"
 				}
 			]
 		}

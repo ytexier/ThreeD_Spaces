@@ -58,7 +58,9 @@ initScene = function(data) {
     animate();
   };
 
+
 window.onload = load_objects('data.json');
+//window.onload = load_localStorage();
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.
@@ -95,6 +97,12 @@ function load_objects(path) {
     pointer_lock_check();
     initScene(data);
   });
+}
+
+function load_localStorage() {
+  pointer_lock_check();
+  //console.log(window.localStorage.getItem("data"));
+  //initScene(window.localStorage.getItem("data"));
 }
 
 /**
