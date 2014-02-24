@@ -51,10 +51,15 @@ DThreeSpaces.Container = function(name){
     }
 
     this.toJson = function(){
-        var json = "{name:"+name+", floors: [";
-        for(var i=0; i<grids.length; i++)
-            json += grids[i].toJson().concat(",");
-        return JSON.stringify(json.slice(0, json.lastIndexOf(",")).concat("]}"));
+        var json = '{"name":"'+name+'"';
+        if(grids.length>0){
+            json += ', "floors": [';
+            for(var i=0; i<grids.length; i++)
+                json += grids[i].toJson().concat(',');
+            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+        }
+        //return JSON.stringify(json.concat("}"));
+        return json.concat('}');
     }
 }
 
@@ -474,25 +479,23 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
                             var currentLine = svgGrid.select("line.current");
 
+                            var circle; 
+
                             if(currentLine.empty()){
 
                                 if(     (x2 < (xMouse + xRange) && x2 > (xMouse - xRange))
                                     &&  (y2 < (yMouse + yRange) && y2 > (yMouse - yRange))
                                 ){
-                                    svgGrid.append("circle")
-                                        .attr("class", "current")
-                                        .attr("cx", x2).attr("cy", y2).attr("r", 10)
-                                        .attr("stroke-width", 3).style("stroke", "red");
+                                    circle = svgGrid.append("circle")
+                                        .attr("cx", x2).attr("cy", y2);
                                     addCurrentLine(x2, y2, depthWall);
                                 }
 
                                 if(     (x1 < (xMouse + xRange) && x1 > (xMouse - xRange))
                                     &&  (y1 < (yMouse + yRange) && y1 > (yMouse - yRange))
                                 ){
-                                    svgGrid.append("circle")
-                                        .attr("class", "current")
-                                        .attr("cx", x1).attr("cy", y1).attr("r", 10)
-                                        .attr("stroke-width", 3).style("stroke", "red");
+                                    circle = svgGrid.append("circle")
+                                        .attr("cx", x1).attr("cy", y1);
                                     addCurrentLine(x1, y1, depthWall);
                                 }
                             }else{
@@ -500,24 +503,25 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                                 if(     (x2 < (xMouse + xRange) && x2 > (xMouse - xRange))
                                     &&  (y2 < (yMouse + yRange) && y2 > (yMouse - yRange))
                                 ){
-                                    var circle = svgGrid.append("circle")
-                                        .attr("class", "current")
-                                        .attr("cx", x2).attr("cy", y2).attr("r", 10)
-                                        .attr("stroke-width", 3).style("stroke", "red");
+                                    circle = svgGrid.append("circle")
+                                        .attr("cx", x2).attr("cy", y2);
                                     addWall(circle.attr("cx"), circle.attr("cy"), depthWall);
                                  }
 
                                 if(     (x1 < (xMouse + xRange) && x1 > (xMouse - xRange))
                                     &&  (y1 < (yMouse + yRange) && y1 > (yMouse - yRange))
                                 ){
-                                    var circle = svgGrid.append("circle")
-                                        .attr("class", "current")
-                                        .attr("cx", x1).attr("cy", y1).attr("r", 10)
-                                        .attr("stroke-width", 3).style("stroke", "red");
+                                    circle = svgGrid.append("circle")
+                                        .attr("cx", x1).attr("cy", y1);
                                     addWall(circle.attr("cx"), circle.attr("cy"), depthWall);
                                 }
 
                             }
+                            circle
+                                .attr("class", "current")
+                                .attr("r", 10)
+                                .attr("stroke-width", 3)
+                                .style("stroke", "red");
 
     }
 
@@ -668,31 +672,31 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     }
 
     this.toJson = function() {
-        var json = "{ r:"+r+",width:"+widthGrid+",height:"+heightGrid+",depth:"+depth;
+        var json = '{"r":"'+r+'","width":"'+widthGrid+'","height":"'+heightGrid+'","depth":"'+depth+'"';
         if(walls.length>0){
-            json += ", walls: [";
+            json += ', "walls": [';
             for(var i=0; i<walls.length; i++){
-                json += walls[i].toJson().concat(",");
+                json += walls[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(",")).concat("]");
+            json = json.slice(0, json.lastIndexOf(',')).concat(']');
         }
 
         if(objects.length>0){
-            json += ", objects: [";
+            json += ', "objects": [';
             for(var i=0; i<objects.length; i++){
-                json += objects[i].toJson().concat(",");
+                json += objects[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(",")).concat("]");
+            json = json.slice(0, json.lastIndexOf(',')).concat(']');
         }
 
         if(paintings.length>0){
-            json += ", paintings: [";
+            json += ', "paintings": [';
             for(var i=0; i<paintings.length; i++){
-                json += paintings[i].toJson().concat(",");
+                json += paintings[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(",")).concat("]");
+            json = json.slice(0, json.lastIndexOf(',')).concat(']');
         }
-        return json.concat("}");
+        return json.concat('}');
     }
     
 }
@@ -723,7 +727,7 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
     }
 
     this.toJson = function() {
-        return "{x1:"+xy1[0]+",y1:"+xy1[1]+",x2:"+xy2[0]+",y2:"+xy2[1]+",angle:"+angle+",depth:"+depth+"}";
+        return '{"x1":"'+xy1[0]+'","y1":"'+xy1[1]+'","x2":"'+xy2[0]+'","y2":"'+xy2[1]+'","angle":"'+angle+'","depth":"'+depth+'"}';
     }
 }
 
@@ -736,7 +740,7 @@ DThreeSpaces.Object = function(x, y, model) {
         var xy = getTruePositions(x, y);
 
     this.toJson = function() {
-        return "{x:"+xy[0]+",z:"+xy[1]+",model:"+model+"}";
+        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","model":"'+model+'"}';
     }
 }
 
@@ -748,7 +752,7 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
         var xy = getTruePositions(x, y);
 
     this.toJson = function() {
-        return "{x:"+xy[0]+",z:"+xy[1]+",angle:"+angle+"model:"+model+"}";
+        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","angle":"'+angle+'","model":"'+model+'"}';
     }
 }
 
