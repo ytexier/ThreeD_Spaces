@@ -10,6 +10,7 @@ var container = new DThreeSpaces.Container("Museum Test");
         .each(function(d){ 
           if(d3.select(this).attr("id") === id){
             d3.select(this).attr("class", clicked_class + " active");
+            console.log(this.value);
             container.setCurrentGrid(this.value);
             container.setVisibleGrid(this.value);
           }else {
@@ -25,7 +26,8 @@ var container = new DThreeSpaces.Container("Museum Test");
       /**
        * Ajouter bouton avant ?
        */
-      function addGrid(){
+      function addGrid(width, depth, height){
+
         var div = d3.select("div[id=floors]")
         .select("p")
         .append("button")
@@ -38,7 +40,8 @@ var container = new DThreeSpaces.Container("Museum Test");
           value: function() {return container.getLength();}
         })
         .text("R" + container.getLength());
-        container.addGrid(new DThreeSpaces.Grid());
+        container.addGrid(width, depth, 2, height);
+        $("#new_floor_alert").hide();
       }
 
       function selectItem(item){

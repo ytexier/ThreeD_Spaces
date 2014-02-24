@@ -73,11 +73,43 @@
         <p><a href="#" class="btn btn-primary btn-lg" role="button" onClick="$('#jumbotron').hide()">Hide &raquo;</a></p>
       </div>
 
+      <div class="alert alert block alert-info fade in" id="new_floor_alert">
+          <button type="button" class="close" onClick="$('#new_floor_alert').hide();">×</button>
+          <h4>New Floor !</h4>
+          <div class="input-group">
+            <span class="input-group-addon">Width</span>
+            <input id="new_floor_width" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            <span class="input-group-addon">Depth</span>
+            <input id="new_floor_depth" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            <span class="input-group-addon">Height</span>
+            <input id="new_floor_height" type="text" class="form-control" placeholder="50" data-toggle="popover" data-placement="top" data-content="Missing value.">
+          </div>
+          <a class="btn btn-info" href="#" onClick="new_floor_form()">Validate</a>
+          <a class="btn btn-default" href="#" onClick="addGrid(700, 700, 50)">Default</a>
+      </div>
+
+      <div class="alert alert block alert-danger fade in" id="delete_floor_alert">
+        <button type="button" class="close" onClick="$('#delete_floor_alert').hide();">×</button>
+          <h4>Delete Floor !</h4>
+          <div class="row">
+            <div class="col-lg-6">
+              <div class="input-group">
+                <div class="input-group-btn">
+                  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" onClick="list_floors()">Action <span class="caret"></span></button>
+                  <ul id="floor_list" class="dropdown-menu"></ul>
+                  <button class="btn btn-danger" onClick="delete_floor(selected_floor_index)">Delete</button>   
+                </div>
+                <input type="text" id="selected_floor" class="form-control">
+              </div>
+            </div>
+          </div>
+      </div>      
+
       <div id="floors" class="floors">
         <p>
           <!-- <button type="button" class="btn btn-xs btn-default">R0</button> -->
-          <button type="button" class="btn btn-xs btn-info" name="add" onClick="addGrid()">+1</button>
-          <button type="button" class="btn btn-xs btn-danger" name="remove" onClick="">-1</button>
+          <button type="button" class="btn btn-xs btn-info" name="add" onClick="$('#new_floor_alert').show();">+1</button>
+          <button type="button" class="btn btn-xs btn-danger" name="remove" onClick="$('#delete_floor_alert').show();">-1</button>
         </p>
       </div>
 
@@ -90,15 +122,25 @@
     </div>
     <div id="sidebar" class="list-group"> 
 
-      <a href="#" class="list-group-item active" value="wall" onClick="selectItem('wall')">
+      <a href="#" class="list-group-item" value="wall" onClick="selectItem('wall')">
         <i class="icon-dashboard"></i> Wall
+      </a>
+
+      <a href="#" class="list-group-item" value="light" onClick="selectItem('light')">
+        <i class="icon-dashboard"></i> Light
       </a>
 
       <a href="#" class="list-group-item" value="object" id="object" data-parent="#sidebar" onClick="selectItem('object')">
         <i class="icon-group"></i> Models
       </a>
 
-      <div id="objects_collapse" class="list-group subitem collapse"></div>  
+      <div id="objects_collapse" class="list-group subitem collapse"></div>
+
+      <a href="#" class="list-group-item" value="painting" id="painting" data-parent="#sidebar" onClick="selectItem('object')">
+        <i class="icon-group"></i> Paintings
+      </a>
+
+      <div id="paintings_collapse" class="list-group subitem collapse"></div> 
 
       <a href="#articles" class="list-group-item"  data-parent="#sidebar">
         <i class="icon-file-text"></i> Lights
@@ -158,9 +200,12 @@
     <script type="text/javascript">
       //var scene = new Physijs.Scene;
       var mode = "2d_mode";
+      var selected_floor_index;
 
       $("#3d").hide();
       $("#wanaplan").hide();
+      $("#new_floor_alert").hide();
+      $("#delete_floor_alert").hide();
 
       function nav_bar(id) {
         if(id != mode) {
@@ -198,6 +243,114 @@
         localStorage.setItem("data", getJSON());
       }
 
+      function new_floor_form() {
+        var new_width = $("#new_floor_width").val();
+        var new_depth = $("#new_floor_depth").val();
+        var new_height = $("#new_floor_height").val();
+
+        var valid_form = true;
+
+        if(new_width === "") {
+          $("#new_floor_width").popover("show");
+          setTimeout(function () {
+            $("#new_floor_width").popover("hide");
+          }, 2000);
+          valid_form = false;
+        }
+        if(new_depth === "") {
+          $("#new_floor_depth").popover("show");
+          setTimeout(function () {
+            $("#new_floor_depth").popover("hide");
+          }, 2000);
+          valid_form = false;
+        }
+        if(new_height === "") {
+          $("#new_floor_height").popover("show");
+          setTimeout(function () {
+            $("#new_floor_height").popover("hide");
+          }, 2000);
+          valid_form = false;
+        }
+        
+        if(valid_form) {
+          addGrid(new_width, new_depth, new_height);
+        }
+      }
+
+      function selected_floor_callback(index) {
+        var text = "R"+index;
+        selected_floor_index = index;
+        $('#selected_floor').val(text);
+        console.log(selected_floor_index);
+      }
+
+      function list_floors() {
+        d3.select("ul[id=floor_list]").html("");
+        for(var i = 0; i < container.getGrids().length; i++) {
+          var ul = d3.select("ul[id=floor_list]")
+          .append("li")
+          .attr({
+            name: "floor_li"
+          });  
+        }
+        var lis = d3.selectAll("li[name=floor_li]")
+          .each(function (d,i) {
+            var index = i;
+            d3.select(this)
+            .append("a")
+            .text("R"+i)
+            .attr({
+              href: "#"
+            });
+          });
+      }
+
+      $(document.body).on('click', '.dropdown-menu li', function(event) {
+ 
+       var $target = $(event.currentTarget);
+ 
+       $target.closest('.input-group')
+        .find('[data-bind="label"]')
+        .text($target.text())
+        .end()
+        .children('.dropdown-toggle')
+        .dropdown('toggle');
+        selected_floor_callback($target.text().slice(1))
+        return false;
+      });
+
+      function delete_floor(index) {
+        console.log(container.getGrids());
+        container.removeGrid(index);
+        console.log(container.getGrids());
+        refresh_floor_buttons();
+        selected_floor_index = -1;
+      }
+
+      function refresh_floor_buttons() {
+
+          var div = d3.selectAll("button[name=floor_button]")
+          .each(function (d, i) {
+            if(i == parseInt(selected_floor_index)) {
+              console.log('delete');
+              d3.select(this).remove();
+            }
+          });
+
+          var div = d3.selectAll("button[name=floor_button]")
+          .each(function (d, i) {
+            if(i >= parseInt(selected_floor_index)) {
+              d3.select(this)
+              .text("R" + i)
+              .attr({
+                id: "floor_button"+i,
+                value: i
+              });
+            }
+          });
+
+      }
+
       $('#sidebar > a').on('click', function (e) {
         e.preventDefault();
         if(!$(this).hasClass("active")){
@@ -225,6 +378,29 @@
               });
             });
           var badge = d3.select("a[id=object]")
+            .append("span")
+            .text(data.length)
+            .attr({
+              class: "badge bg_danger"
+            });
+          });
+
+      $.getJSON(
+        "2D/paintings.json",
+        function(data) {
+          $(data).each(function (i) {
+            var callback = "selectObject('"+data[i].path+"')";
+            var div = d3.select("div[id=paintings_collapse]")
+            .append("a")
+            .text(data[i].name)
+            .attr({
+              href: "#",
+              class: "list-group-item",
+              value: data[i].path,
+              onClick: callback
+              });
+            });
+          var badge = d3.select("a[id=painting]")
             .append("span")
             .text(data.length)
             .attr({

@@ -6,6 +6,14 @@ body {
 	padding-top: 30px;
 }
 
+#new_floor_alert {
+	margin-top: 30px;
+}
+
+#delete_floor_alert {
+	margin-top: 30px;
+}
+
 .grid {
 	float: left;
 	width: 70%;

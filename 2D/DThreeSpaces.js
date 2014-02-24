@@ -12,6 +12,7 @@ var objectHeight = 40;
 
 var isAfterDrag = false;  
 
+
 DThreeSpaces.Container = function(name){
 
     var name = name;
@@ -28,6 +29,9 @@ DThreeSpaces.Container = function(name){
     }
     this.addGrid = function(width, height, depth, r){
         grids.push(new DThreeSpaces.Grid(this, width, height, depth, r));
+    }
+    this.getGrids = function(){
+        return grids;
     }
     this.getLength = function(){
         return grids.length;
@@ -53,6 +57,10 @@ DThreeSpaces.Container = function(name){
     }
     this.getCurrentItem = function(){
         return currentItem;
+    }
+    this.removeGrid = function(index){
+        if(grids.length > 0)
+            grids.splice(index, 1);
     }
 
     this.toJson = function(){
@@ -87,13 +95,12 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     var firstMouseOver = true;
     var tempPositions = [];
 
-   
-
     var widthPainting=60;
 
 	/*
     * Set with and heigh of the SVG canvas
     */
+   
     var svgGrid = d3.select("#grid")
         .append("svg:svg")
         .attr("width", widthGrid) //Set width of the SVG canvas
@@ -162,7 +169,6 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                     isAfterDrag=false;
                 else
                     (firstClick) ?  currentGrid.addCurrentLine(x,y, depthWall) : currentGrid.addWall(x,y, depthWall, heightWall);
-
                 break;
 
             case "object":
@@ -230,7 +236,6 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                 firstClick=true;
                 console.log("wall added !");
     }
-
 
     /**
      * add a object model with all events linked
@@ -311,7 +316,6 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
             });
         return res;
     }
-
 
     /**
      * clean all drawings of class : current
@@ -436,6 +440,8 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
                   }    */
 
+                break;
+
             default: console.log("currentItem not found");
         }
 
@@ -466,7 +472,6 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     }
 
 
-
     this.setVisible = function() {
         svgGrid.style("visibility", "visible");
     }
@@ -475,7 +480,9 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     }
 
     this.toJson = function() {
+
         var json = '{"r":"'+r+'","width":"'+widthGrid+'","height":"'+heightGrid+'","depth":"'+depth+'"';
+
         if(walls.length>0){
             json += ', "walls": [';
             for(var i=0; i<walls.length; i++){
@@ -854,6 +861,7 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
     }
 }
 
+
 DThreeSpaces.Door = function(x, y, angle) {
     var x = x;
     var y = y;
@@ -877,8 +885,6 @@ DThreeSpaces.Window = function(x, y, angle) {
 }
 
 
-
-
 function getTruePositions(x, y){
         var x = x;
         var y = y;
@@ -886,11 +892,10 @@ function getTruePositions(x, y){
         truePositions.push(x - currentGrid.getWidth()/2);
         truePositions.push(y - currentGrid.getHeight()/2);
         return truePositions;
+
 }
 
 function getDistance(x1, y1, x2, y2){
      var distance = Math.sqrt(Math.pow((x2 - x1),2)+Math.pow((y2 - y1),2)); 
      return distance;
 }
-
-
