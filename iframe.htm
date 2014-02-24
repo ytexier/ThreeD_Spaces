@@ -1,0 +1,125 @@
+<HTML>
+<!-- Hello World in HTML -->
+<HEAD>
+<TITLE>Integration Wanaplan</TITLE>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> 
+ <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+ <link rel="stylesheet" href="./jquery-ui-1.10.4.custom/css/ui-darkness/jquery-ui-1.10.4.custom.min.css">
+
+
+
+
+ <script>
+$(function() {
+var code = $( "#code" ),
+allFields = $( [] ).add( code ),
+tips = $( ".validateTips" );
+function updateTips( t ) {
+tips
+.text( t )
+.addClass( "ui-state-highlight" );
+setTimeout(function() {
+tips.removeClass( "ui-state-highlight", 1500 );
+}, 500 );
+}
+function checkLength( o, n, min, max ) {
+if ( o.val().length > max || o.val().length < min ) {
+o.addClass( "ui-state-error" );
+updateTips( "Le  " + n + " doit etre d'une longueur de " +
+min +"." );
+return false;
+} else {
+return true;
+}
+}
+function checkRegexp( o, regexp, n ) {
+if ( !( regexp.test( o.val() ) ) ) {
+o.addClass( "ui-state-error" );
+updateTips( n );
+return false;
+} else {
+return true;
+}
+}
+$( "#dialog-form" ).dialog({
+autoOpen: false,
+height: 300,
+width: 350,
+modal: true,
+buttons: {
+"Valider": function() {
+var bValid = true;
+allFields.removeClass( "ui-state-error" );
+bValid = bValid && checkLength( code, "Code", 6, 6 );
+bValid = bValid && checkRegexp( code, /^([0-9])+$/i, "Le code est compose de 6 chiffres" );
+if ( bValid ) {
+var adresse= "http://www.kozikaza.com/wanaplan/"+code.val()+".json";
+//C'est ici que l'on récupère l'adresse du JSon d'un nouveau projet
+alert(adresse);
+$( this ).dialog( "close" );
+}
+},
+"Annuler": function() {
+$( this ).dialog( "close" );
+}
+},
+close: function() {
+allFields.val( "" ).removeClass( "ui-state-error" );
+}
+});
+
+$("#boutonMusee").button()
+.click(function() {
+//C'est ici que l'on récupère l'adresse du fichier JSon
+alert("http://www.kozikaza.com/wanaplan/684861.json");
+});
+$( "#boutonNouveau" )
+.button()
+.click(function() {
+$( "#dialog-form" ).dialog( "open" );
+});
+});
+
+//	$("#boutonMusee").click(function(){alert("http://www.kozikaza.com/wanaplan/684861.json");});
+//	$("#boutonNouveau").click(function(){
+</SCRIPT>	
+	
+	
+</HEAD>
+<BODY>
+<DIV ID="wana">
+	<P>
+		<object data="http://www.kozikaza.com/wanaplan/684861/edit" width="95%" height="90%"> <embed src="http://www.kozikaza.com/wanaplan/684861/edit" width="95%" height="90%"> </embed> Error: Embedded data could not be displayed. </object>
+		<!--<object data=http://v1.wanaplan.com/#b3JpZ2luPWh0dHA6Ly93d3cua296aWthemEuY29tJmFwaUtleT1jMTcxOTFjZTU4ODdhYmE2NzQyNTNjZDYyNWZkNGM1YiZwbGFuVXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuLzY4NDg2MS5qc29uJnNhdmVVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NhdmUmbmV3VXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuL3JlcXVlc3QvbmV3JnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JmF1dG9SZXNpemU9dHJ1ZSZwYXJhbXM9JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2VvcmdlJndpZHRoPTE4MDkmaGVpZ2h0PTc5NSZpZD0yJnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2Vvcmdl width="95%" height="90%"> <embed src=http://v1.wanaplan.com/#b3JpZ2luPWh0dHA6Ly93d3cua296aWthemEuY29tJmFwaUtleT1jMTcxOTFjZTU4ODdhYmE2NzQyNTNjZDYyNWZkNGM1YiZwbGFuVXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuLzY4NDg2MS5qc29uJnNhdmVVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NhdmUmbmV3VXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuL3JlcXVlc3QvbmV3JnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JmF1dG9SZXNpemU9dHJ1ZSZwYXJhbXM9JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2VvcmdlJndpZHRoPTE4MDkmaGVpZ2h0PTc5NSZpZD0yJnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2Vvcmdl width="95%" height="90%"> </embed> Error: Embedded data could not be displayed. </object>-->
+	</P>
+
+	<P>
+		Pensez &agrave; sauvegarder votre travail avant d'afficher le rendu 3D.
+	</P>
+	<DIV ID="lanceurParsing">
+	<BUTTON ID="boutonMusee">
+		Le rendu de mon mus&eacute;e
+	</BUTTON>
+	<BUTTON ID="boutonNouveau">
+		Le rendu d'un nouveau projet
+	</BUTTON>
+	</DIV>
+
+	<div id="dialog-form" title="Code du nouveau projet">
+		<p class="validateTips"></p>
+		<form>
+		<fieldset>
+			<label for="code">Entrez le code de votre projet</label>
+			<input type="text" name="code" id="code" class="text ui-widget-content ui-corner-all">
+		</fieldset>
+		</form>
+	</div>
+		
+</DIV>
+</BODY>
+</HTML>
+
+
+
+
