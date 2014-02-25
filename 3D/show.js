@@ -39,7 +39,8 @@ initScene = function(data) {
 
 
     //Init light
-    scene.add( new THREE.AmbientLight( 0x212223) );
+    scene.add(new THREE.AmbientLight(0x212223));
+    scene.add(new THREE.DirectionalLight(0xffffff, 1));
     renderer.shadowMapEnabled = true;
     renderer.shadowMapSoft = false;
     renderer.shadowCameraNear = 3;
@@ -48,8 +49,7 @@ initScene = function(data) {
     renderer.shadowMapBias = 0.0039;
     renderer.shadowMapDarkness = 0.5;
     renderer.shadowMapWidth = 1024;
-    renderer.shadowMapHeight = 1024; 
-
+    renderer.shadowMapHeight = 1024;
 
     museum = new ThreeDSpaces.Museum(data);
     objects = museum.toObjects();
@@ -102,7 +102,9 @@ function load_objects(path) {
 function load_localStorage() {
   pointer_lock_check();
   //console.log(window.localStorage.getItem("data"));
-  initScene(window.localStorage.getItem("data"));
+  var string = window.localStorage.getItem("data");
+  var data = JSON.parse(string);
+  initScene(data);
 }
 
 /**

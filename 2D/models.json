@@ -1,10 +1,10 @@
 [
 	{
 		"name": "Chaise",
-		"path": "chaise.dae"
+		"path": "assets/models/chaise.dae"
 	},
 	{
 		"name": "Table",
-		"path": "table.dae"
+		"path": "assets/models/table.dae"
 	}
 ]

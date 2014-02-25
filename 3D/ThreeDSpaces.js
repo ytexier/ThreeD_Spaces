@@ -1,16 +1,14 @@
 var ThreeDSpaces = { rev: '1' }; 
 
-ThreeDSpaces.Museum = function(string) {
+ThreeDSpaces.Museum = function(data) {
 
-	if(string === undefined)
+	if(data === undefined)
 		return;
 
-	var data = JSON.parse(string);
 	var rawFloors = data.floors;
 	var floors = [];
 	var objects = [];
 
-	console.log(string);
 	console.log(data);
 	console.log(rawFloors);
 
@@ -55,6 +53,8 @@ ThreeDSpaces.Floor = function(data) {
 	var objects = [];
 
 	var floor_texture, floor_material, floor_mesh;
+
+	console.log(rawWalls);
 
 	this.generate = function() {
 		for(var i = 0; i < rawWalls.length; i++) {
@@ -101,15 +101,15 @@ ThreeDSpaces.Floor = function(data) {
 		floor_mesh = new THREE.Mesh(new THREE.CubeGeometry(width, height, depth, 10), floor_material);
 		floor_mesh.rotation.x = -Math.PI / 2;
 		floor_mesh.position.y = r;//test, en fonction de l'etage
-		floor_mesh.receiveShadow = true;
+		//floor_mesh.receiveShadow = true;
 	}
                     
 	this.addToScene = function(scene) {
+		console.log(walls);
 		for(var i = 0; i < walls.length; i++) {
 			walls[i].addToScene(scene);
 		}
 		for(var i = 0; i < models.length; i++) {
-
 			models[i].addToScene(scene);
 		}
 		for(var i = 0; i < lights.length; i++) {
@@ -141,6 +141,7 @@ ThreeDSpaces.Wall = function (data, r) {
 	if(data === undefined)
 		return;
 
+	console.log(data);
 	/**
 	 * rawObject: THREE.Mesh
 	 * physiObject: Physijs.BoxMesh
@@ -193,7 +194,7 @@ ThreeDSpaces.Wall = function (data, r) {
 		wall_mesh.position.z = posZ;
 		wall_mesh.rotation.y = angle;
 		wall_mesh.position.y = r + height/2;
-		wall_mesh.castShadow = true;
+		//wall_mesh.castShadow = true;
 		physiObject = wall_mesh;
 		
 	}
@@ -287,7 +288,8 @@ ThreeDSpaces.Model =  function(data, r) {
 	var posX = data.posX;
 	var posZ = data.posZ;
 
-	var model = 'assets/models/'+data.model;
+	//var model = 'assets/models/'+data.model;
+	var model = data.model;
 	var object;
 
 	this.generate = function(r) {
@@ -381,15 +383,15 @@ ThreeDSpaces.Light =  function(data, r) {
 	var posX = data.posX;
 	var posZ = data.posZ;
 
-		console.log("light_posX "+posX);
-		console.log("light_posZ "+posZ);
+	console.log("light_posX "+posX);
+	console.log("light_posZ "+posZ);
 
 	this.generate = function(r) {
 		object = new THREE.DirectionalLight(0xffffff, 1);
 		object.position.x = posX;
 		object.position.y = r + 50;
 		object.position.z = posZ;
-		object.castShadow = true;
+		//object.castShadow = true;
 
 	}
 

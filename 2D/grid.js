@@ -26,7 +26,9 @@ var container = new DThreeSpaces.Container("Museum Test");
       /**
        * Ajouter bouton avant ?
        */
-      function addGrid(width, depth, height){
+      function addGrid(width, depth){
+
+        var r = container.getLength();
 
         var div = d3.select("div[id=floors]")
         .select("p")
@@ -40,7 +42,7 @@ var container = new DThreeSpaces.Container("Museum Test");
           value: function() {return container.getLength();}
         })
         .text("R" + container.getLength());
-        container.addGrid(width, depth, 2, height, 'assets/texture/floor/classic_wood.jpg');
+        container.addGrid(width, depth, 2, r*100, 'assets/textures/floor/classic_wood.jpg');
         $("#new_floor_alert").hide();
       }
 
@@ -57,6 +59,7 @@ var container = new DThreeSpaces.Container("Museum Test");
             container.setCurrentItem(item);
             break;
           case "light":
+            container.setCurrentItem(item);
             break;
           case "painting":
             container.setCurrentItem(item);

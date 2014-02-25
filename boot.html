@@ -80,11 +80,13 @@
             <input id="new_floor_width" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
             <span class="input-group-addon">Depth</span>
             <input id="new_floor_depth" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            <!--
             <span class="input-group-addon">Height</span>
             <input id="new_floor_height" type="text" class="form-control" placeholder="50" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            -->
           </div>
           <a class="btn btn-info" href="#" onClick="new_floor_form()">Validate</a>
-          <a class="btn btn-default" href="#" onClick="addGrid(700, 700, 50)">Default</a>
+          <a class="btn btn-default" href="#" onClick="addGrid(700, 700)">Default</a>
       </div>
 
       <div class="alert alert block alert-danger fade in" id="delete_floor_alert">
@@ -125,7 +127,7 @@
         <i class="icon-dashboard"></i> Wall
       </a>
 
-      <a href="#" class="list-group-item" value="light" onClick="selectItem('light')">
+      <a href="#" id="light_list_item" class="list-group-item" value="light" onClick="selectItem('light')">
         <i class="icon-dashboard"></i> Light
       </a>
 
@@ -271,6 +273,7 @@
           }, 2000);
           valid_form = false;
         }
+        /*
         if(new_height === "") {
           $("#new_floor_height").popover("show");
           setTimeout(function () {
@@ -278,9 +281,9 @@
           }, 2000);
           valid_form = false;
         }
-        
+        */
         if(valid_form) {
-          addGrid(new_width, new_depth, new_height);
+          addGrid(new_width, new_depth);
         }
       }
 
@@ -421,6 +424,12 @@
             html: 'true',
             title : '<span class="text-info"><strong>New Door !</strong></span>',
             content : '<button type="button" class="btn btn-info" onClick="selectObject(\'door\')">Add</button>'
+        });
+        $("#light_list_item").popover({
+            placement: 'right',
+            html: 'true',
+            title : '<span class="text-info"><strong>New SpotLight !</strong></span>',
+            content : '<button type="button" class="btn btn-info" onClick="selectObject(\'light\')">Add</button>'
         });
       });
 
