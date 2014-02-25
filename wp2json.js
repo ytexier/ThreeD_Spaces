@@ -271,7 +271,9 @@ function wp2json(jsonWP)
 		//document.write(json);
 		
 		//Ici on store
-		$("#monJson").text(json);
+		// $("#monJson").text(json);
+		localStorage['jsonGenere'] = json;
+		$("#enter3D").show();
 	});
 
 	}
@@ -529,7 +531,7 @@ function wp2json(jsonWP)
 		json += "]";
 		
 		json += "}";
-		alert("Dans la fonction "+json);
+
 		//document.write(json);
 		return json;
 		}
