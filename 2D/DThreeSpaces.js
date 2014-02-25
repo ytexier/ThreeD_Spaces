@@ -14,11 +14,7 @@ var isAfterDrag = false;
 var firstMouseOver = true;
 
 var doorWidth=30;
-<<<<<<< HEAD
 var doorDepth=15;
-=======
-var doorDepth=10;
->>>>>>> dimspace
 var paintingWidth=60;
 var lightHeight=80;
 var doorHeight=70;
@@ -927,19 +923,38 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, height) {
  **/
 DThreeSpaces.Object = function(x, y, model) {
 
+    var rect;
+    var label;
+    var svg = currentGrid.getSVG();
+    var object = this;
+
     var x = x;
     var y = y;
     var angle = angle;
     var model = model;
         var xy = getTruePositions(x, y);
 
+    this.getName = function(){
+        return model;
+    }
+
+    this.getLabel = function(){
+        return label;
+    }
+
+    this.getX = function(){
+        return x;
+    }
+
+    this.getY = function(){
+        return y;
+    }
+
     this.draw = function(){
 
-        var object = this;
-        var svg = currentGrid.getSVG();
         var objects = currentGrid.getObjects();
 
-                svg
+            rect = svg
                     .append("rect")
                     .style("stroke","green")
                     .attr("stroke-width", 3)
@@ -974,8 +989,12 @@ DThreeSpaces.Object = function(x, y, model) {
                                 var selected = d3.select(this)
                                     .attr("x", d3.mouse(this)[0]-objectWidth/2)
                                     .attr("y", d3.mouse(this)[1]-objectHeight/2);
-
-                             })
+                                var x = parseFloat(selected.attr("x"));
+                                var y = parseFloat(selected.attr("y"));
+                                d3.select(label).node()
+                                    .attr("x", x + objectWidth/2)
+                                    .attr("y", y - 5);
+                            })
                             .on("dragend", function(d) {
                                 var selected = d3.select(this)
                                     .style("stroke","green"); 
@@ -984,6 +1003,20 @@ DThreeSpaces.Object = function(x, y, model) {
                                 objects.push(new DThreeSpaces.Object(selected.attr("x"), selected.attr("y"), model));     
                             })
                     );
+            
+                    object.writeLabel();
+
+    }
+
+    this.writeLabel = function(){
+                label = svg.append('text')
+                    .text(object.getName())
+                    .attr('x', object.getX())
+                    .attr('y', object.getY() - 25)
+                    .attr("font-size",15)
+                    .attr("font-family","serif")
+                    .attr("text-anchor","middle")
+                    .attr("font-weight","bold");    
     }
 
     this.toJson = function() {
