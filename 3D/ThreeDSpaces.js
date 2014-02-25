@@ -393,7 +393,7 @@ ThreeDSpaces.Light =  function(data, r) {
 	this.generate = function(r) {
 		object = new THREE.DirectionalLight(0xffffff, 1);
 		object.position.x = posX;
-		object.position.y = r + 50;
+		object.position.y = r;
 		object.position.z = posZ;
 		//object.castShadow = true;
 

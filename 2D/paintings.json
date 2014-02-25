@@ -1,14 +1,14 @@
 [
 	{
 		"name": "Tableau 1",
-		"path": "assets/models/Paris-PontNeuf.dae"
+		"path": "assets/models/paintings/holiday.dae"
 	},
 	{
 		"name": "Tableau 2",
-		"path": "assets/models/Paris-PontNeuf.dae"
+		"path": "assets/models/paintings/holiday.dae"
 	},
 	{
 		"name": "Tableau 3",
-		"path": "assets/models/Paris-PontNeuf.dae"
+		"path": "assets/models/paintings/holiday.dae"
 	}
 ]
