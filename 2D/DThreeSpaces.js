@@ -309,7 +309,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     /**
      * Not used, detecting whether there is a collision
      */
-    function checkCollides(item){
+    this.checkCollides = function(item){
 
         var res;
         svgGrid
@@ -457,7 +457,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                         firstClickX=x;
                         firstClickY=y;
 
-                        var res = checkCollides(select);
+                        var res = currentGrid.checkCollides(select);
                         if(res!=null){
                             var xx = parseInt(res.attr("x1"));
                             var yy = parseInt(res.attr("y1"));
@@ -960,6 +960,10 @@ DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
                     .attr("y2", y2)
                     .attr("stroke-width", doorDepth)
                     .style("stroke", "yellow")
+                    .on("dblclick", function() {
+                        this.remove();
+                        doors.splice(doors.indexOf(door), 1);
+                    })
                     .call(
                                     d3.behavior.drag()
                                         .on("dragstart", function(d) {
@@ -1001,7 +1005,7 @@ DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
 
                                             firstClickX=x;
                                             firstClickY=y;
-                                   
+
                                         })
                                         .on("dragend", function(d) {
                                             var selected = d3.select(this)
