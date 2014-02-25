@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -130,13 +129,21 @@
         <i class="icon-dashboard"></i> Light
       </a>
 
+      <a href="#" id="door_list_item" class="list-group-item" value="door" onClick="selectItem('door')">
+        <i class="icon-dashboard"></i> Door
+      </a>
+
+      <a href="#" class="list-group-item" value="light" onClick="selectItem('window')">
+        <i class="icon-dashboard"></i> Window
+      </a>
+
       <a href="#" class="list-group-item" value="object" id="object" data-parent="#sidebar" onClick="selectItem('object')">
         <i class="icon-group"></i> Models
       </a>
 
       <div id="objects_collapse" class="list-group subitem collapse"></div>
 
-      <a href="#" class="list-group-item" value="painting" id="painting" data-parent="#sidebar" onClick="selectItem('object')">
+      <a href="#" class="list-group-item" value="painting" id="painting" data-parent="#sidebar" onClick="selectItem('painting')">
         <i class="icon-group"></i> Paintings
       </a>
 
@@ -407,6 +414,15 @@
               class: "badge bg_danger"
             });
           });
+
+      $(document).ready(function() {
+        $("#door_list_item").popover({
+            placement: 'right',
+            html: 'true',
+            title : '<span class="text-info"><strong>New Door !</strong></span>',
+            content : '<button type="button" class="btn btn-info" onClick="selectObject(\'door\')">Add</button>'
+        });
+      });
 
       $(document).keyup(function(e) {
         //cleaning all currentLine, currentRect, currentCircle with keyup escap

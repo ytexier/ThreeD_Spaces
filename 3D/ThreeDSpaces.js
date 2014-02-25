@@ -1,13 +1,18 @@
 var ThreeDSpaces = { rev: '1' }; 
 
-ThreeDSpaces.Museum = function(data) {
+ThreeDSpaces.Museum = function(string) {
 
-	if(data === undefined)
+	if(string === undefined)
 		return;
 
+	var data = JSON.parse(string);
 	var rawFloors = data.floors;
 	var floors = [];
 	var objects = [];
+
+	console.log(string);
+	console.log(data);
+	console.log(rawFloors);
 
 	this.generate = function() {
 		for(var i = 0; i < rawFloors.length; i++) {
@@ -38,12 +43,14 @@ ThreeDSpaces.Floor = function(data) {
 
 	var rawWalls = data.walls;
 	var rawObjects = data.objects;
+	var rawPaintings = data.paintings;
 	var rawLights = data.lights;
 	var texture = data.texture;
 
 	var r = data.r;
 	var walls = [];
 	var models = [];
+	var paintings = [];
 	var lights = [];
 	var objects = [];
 
@@ -60,11 +67,16 @@ ThreeDSpaces.Floor = function(data) {
 			models.push(new ThreeDSpaces.Model(rawObjects[i], r));
 		}
 
+		for(var i = 0; i < rawPaintings.length; i++) {
+			paintings.push(new ThreeDSpaces.Painting(rawPaintings[i], r));
+		}
+
+		/*
 		for(var i = 0; i < rawLights.length; i++) {
 			console.log("nb lights " + rawLights.length);
 			lights.push(new ThreeDSpaces.Light(rawLights[i], r));
 		} 
-
+		*/
 		this.generateGround();
 	}
 
@@ -153,9 +165,6 @@ ThreeDSpaces.Wall = function (data, r) {
 
 	var rawDoors = data.doors;
 	var rawWindows = data.windows;
-	var rawPaintings = data.paintings;
-
-	var paintings = [];
 
 	/**
 	 * [generate description]
@@ -178,7 +187,6 @@ ThreeDSpaces.Wall = function (data, r) {
 
 		this.generate_doors(rawDoors);
 		this.generate_windows(rawWindows);
-		this.generate_paintings(rawPaintings);
 
 		var wall_mesh = new Physijs.BoxMesh(currentGeometry, wall_material, 0);
 		wall_mesh.position.x = posX;
@@ -279,7 +287,7 @@ ThreeDSpaces.Model =  function(data, r) {
 	var posX = data.posX;
 	var posZ = data.posZ;
 
-	var model = data.model;
+	var model = 'assets/models/'+data.model;
 	var object;
 
 	this.generate = function(r) {
@@ -295,6 +303,53 @@ ThreeDSpaces.Model =  function(data, r) {
             object.updateMatrix();
             object.rotation.x = -Math.PI / 2;
             object.position.y = r;
+            object.position.z = posZ;
+            object.position.x = posX;
+            object.receiveShadow = true;
+            object.castShadow = true;
+            scene.add(object);
+        });
+
+	}
+
+	this.addToScene = function(scene) {
+		//scene.add(object);
+	}
+
+	this._object = function() {
+		return object;
+	}
+
+	this.generate(r);
+
+}
+
+ThreeDSpaces.Painting =  function(data, r) {
+
+	if(data === undefined)
+		return;
+
+	var posX = data.posX;
+	var posY = data.posY;
+	var posZ = data.posZ;
+	var angle = data.angle;
+
+	var model = data.model;
+	var object;
+
+	this.generate = function(r) {
+
+		console.log("TEST"+model);
+		console.log("TEST"+posX);
+		console.log("TEST"+posZ);
+
+		var loader = new THREE.ColladaLoader();
+        loader.load(model, function (collada) {
+            object = collada.scene;
+            object.scale.x = object.scale.y = object.scale.z =  1;
+            object.updateMatrix();
+            object.rotation.x = -Math.PI / 2;
+            object.position.y = r+posY;
             object.position.z = posZ;
             object.position.x = posX;
             object.receiveShadow = true;

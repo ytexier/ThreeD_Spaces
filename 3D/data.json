@@ -43,8 +43,7 @@
 					"angle": 1.57,
 					"texture": "assets/textures/floor/dark_wood.jpg",
 					"doors": [],
-					"windows": [],
-					"paintings": []
+					"windows": []
 				},
 				{
 					"width": 350,
@@ -55,8 +54,7 @@
 					"angle": 1.57,
 					"texture": "assets/textures/floor/white_wood.jpg",
 					"doors": [],
-					"windows": [],
-					"paintings": []
+					"windows": []
 				},
 				{
 					"width": 500,
@@ -67,8 +65,7 @@
 					"angle": 1.57,
 					"texture": "assets/textures/floor/dark_wood.jpg",
 					"doors": [],
-					"windows": [],
-					"paintings": []
+					"windows": []
 				}
 			],
 			"objects": [
@@ -127,8 +124,10 @@
 			],
 			"paintings": [
 				{
-					"posX": 100,
+					"posX": 200,
+					"posY": 100,
 					"posZ": 50,
+					"angle": 0,
 					"model": "assets/models/Paris-PontNeuf.dae"
 				}
 			]
@@ -175,8 +174,7 @@
 					"angle": 1.57,
 					"texture": "assets/textures/floor/dark_wood.jpg",
 					"doors": [],
-					"windows": [],
-					"paintings": []
+					"windows": []
 				}
 		
 			],
@@ -206,8 +204,10 @@
 			],
 			"paintings": [
 				{
-					"posX": 100,
-					"posZ": 50,
+					"posX": 200,
+					"posY": 50,
+					"posZ": 100,
+					"angle": 0,
 					"model": "assets/models/Paris-PontNeuf.dae"
 				}
 			]
@@ -254,8 +254,7 @@
 					"angle": 1.57,
 					"texture": "assets/textures/floor/dark_wood.jpg",
 					"doors": [],
-					"windows": [],
-					"paintings": []
+					"windows": []
 				}
 			],
 			"objects": [
@@ -284,8 +283,10 @@
 			],
 			"paintings": [
 				{
-					"posX": 100,
-					"posZ": 50,
+					"posX": 200,
+					"posY": 50,
+					"posZ": 100,
+					"angle": 0,
 					"model": "assets/models/Paris-PontNeuf.dae"
 				}
 			]

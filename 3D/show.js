@@ -59,8 +59,8 @@ initScene = function(data) {
   };
 
 
-window.onload = load_objects('data.json');
-//window.onload = load_localStorage();
+//window.onload = load_objects('data.json');
+window.onload = load_localStorage();
 
 /**
 * Fonction appelée à chaque frame de l'éxécution.
@@ -102,7 +102,7 @@ function load_objects(path) {
 function load_localStorage() {
   pointer_lock_check();
   //console.log(window.localStorage.getItem("data"));
-  //initScene(window.localStorage.getItem("data"));
+  initScene(window.localStorage.getItem("data"));
 }
 
 /**
