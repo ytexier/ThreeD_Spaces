@@ -10,7 +10,7 @@
     
 
     <title>ThreeD Spaces</title>
-
+	 <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/ui-darkness/jquery-ui.css" />
     <!-- Bootstrap core CSS -->
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap theme -->
@@ -168,9 +168,42 @@
   <div id="wanaplan">
     <div id="jumbotron_wanaplan" class="jumbotron">
         <h1>ThreeD Spaces</h1>
-        <p>Wanaplan interface.</p>
-        <p><a href="#" class="btn btn-primary btn-lg" role="button" onClick="">??? &raquo;</a></p>
+        <h2>Wanaplan interface.</h2>
+		<p>Use the Wanaplan solution. Create by Wanadesign.<br/>
+		Draw your 2D plan and decorate it</p>
+		<p>Use our buttons to see it in an full 3D environment.</p>
+        <p><a href="#" class="btn btn-primary btn-lg" role="button" onClick="initiateMusee()">Render the Museum</a>
+        <a href="#" class="btn btn-primary btn-lg" role="button" onClick="initiateNouveau()">Render a new project</a></p>
+		<P>
+			Don't forget to save your Wanaplan project before enter the 3D environment.
+		</P>
+		<p><a id="enter3D" href="#" class="btn btn-primary btn-lg" role="button" onClick="initiateEnter3D()">Enter into 3D space</a></p>
       </div>
+	<DIV ID="wana">
+		<P>
+			<!--<object data=http://v1.wanaplan.com/#b3JpZ2luPWh0dHA6Ly93d3cua296aWthemEuY29tJmFwaUtleT1jMTcxOTFjZTU4ODdhYmE2NzQyNTNjZDYyNWZkNGM1YiZwbGFuVXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuLzY4NDg2MS5qc29uJnNhdmVVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NhdmUmbmV3VXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuL3JlcXVlc3QvbmV3JnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JmF1dG9SZXNpemU9dHJ1ZSZwYXJhbXM9JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2VvcmdlJndpZHRoPTE4MDkmaGVpZ2h0PTc5NSZpZD0yJnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2Vvcmdl width="95%" height="90%"> <embed src=http://v1.wanaplan.com/#b3JpZ2luPWh0dHA6Ly93d3cua296aWthemEuY29tJmFwaUtleT1jMTcxOTFjZTU4ODdhYmE2NzQyNTNjZDYyNWZkNGM1YiZwbGFuVXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuLzY4NDg2MS5qc29uJnNhdmVVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NhdmUmbmV3VXJsPWh0dHA6Ly93d3cua296aWthemEuY29tL3dhbmFwbGFuL3JlcXVlc3QvbmV3JnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JmF1dG9SZXNpemU9dHJ1ZSZwYXJhbXM9JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2VvcmdlJndpZHRoPTE4MDkmaGVpZ2h0PTc5NSZpZD0yJnNjcmVlbnNob3RVcmw9aHR0cDovL3d3dy5rb3ppa2F6YS5jb20vd2FuYXBsYW4vNjg0ODYxL3NuYXBzaG90JnRpdGxlPVBsYW4gM0QgZGUgQ29wYWluR2Vvcmdl width="95%" height="90%"> </embed> Error: Embedded data could not be displayed. </object>-->
+		</P>
+
+		
+
+		
+		<div id="monJson">
+		</div>
+
+		<div id="dialog-form" title="Code du nouveau projet">
+			<p class="validateTips"></p>
+			<form>
+			<fieldset>
+				<label for="code">Entrez le code de votre projet</label>
+				<input type="text" name="code" id="code" class="text ui-widget-content ui-corner-all">
+			</fieldset>
+			</form>
+			<P>
+				Vous pouvez trouver le code de votre projet dans la barre d'adresse de votre navigateur lorsque vous etes en train de modifier votre plan. Par exemple 689569
+			</P>
+		</div>			
+	</DIV>
+
   </div>
 
   <div id="3d">
@@ -184,7 +217,9 @@
 
 
   </div> <!-- /container -->
-
+  <div id="objectWP">
+	<object data="http://www.kozikaza.com/wanaplan/684861/edit" width="95%" height="700px"> <embed src="http://www.kozikaza.com/wanaplan/684861/edit" width="100%" height="100%"> </embed> Error: Embedded data could not be displayed. </object>
+	</div>
     
 
 
@@ -192,10 +227,14 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="bootstrap/js/jquery-1.9.0.min.js"></script>
+	 <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="2D/assets/lib/d3.min.js"></script>
     <script type="text/javascript" src="2D/DThreeSpaces.js"></script>
     <script src="2D/grid.js"></script>
+	<script src="./requete.js"></script>
+	<script src="./WanaplanScript.js"></script>
+	<script src="./wp2json.js"></script>
     
     <script type="text/javascript">
       //var scene = new Physijs.Scene;
@@ -206,6 +245,9 @@
       $("#wanaplan").hide();
       $("#new_floor_alert").hide();
       $("#delete_floor_alert").hide();
+      $("#enter3D").hide();
+      $("#objectWP").hide();
+	  
 
       function nav_bar(id) {
         if(id != mode) {
@@ -218,6 +260,7 @@
             $("#2d").show();
             $("#3d").hide();
             $("#wanaplan").hide();
+			 $("#objectWP").hide();
             $("#2d_button").addClass("active");
           break;
           case "wanaplan_mode":
@@ -225,6 +268,7 @@
             $("#2d").hide();
             $("#3d").hide();
             $("#wanaplan").show();
+            $("#objectWP").show();
             $("#wanaplan_button").addClass("active");
           break;
           case "3d_mode":
@@ -232,6 +276,7 @@
             $("#2d").hide();
             $("#3d").show();
             $("#wanaplan").hide();
+			 $("#objectWP").hide();
             $("#3d_button").addClass("active");
           break;
           }
