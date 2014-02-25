@@ -26,6 +26,9 @@
         <br>
         <input type="radio" name="item" value="light" onChange="selectItem(this.value)">Light
         <br>
+        <input type="radio" name="item" value="door" onChange="selectItem(this.value)">Door
+        <input type="button" name="item" value="add" onClick='selectObject("door")'>
+        <br>
         <input type="radio" name="item" value="painting" onChange="selectItem(this.value)">Painting
       </form>
     </div>
@@ -132,6 +135,12 @@
                 },
                 'json'
               );
+              break;
+
+          case "door":
+              resetListModels();
+              resetListPaintings();
+              container.setCurrentItem(item);
               break;
 
           default: console.log("no item selected");

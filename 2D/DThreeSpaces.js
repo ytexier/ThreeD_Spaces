@@ -11,8 +11,19 @@ var objectWidth = 40;
 var objectHeight = 40;
 
 var isAfterDrag = false;  
+var firstMouseOver = true;
 
+var doorWidth=30;
+var doorDepth=10;
+var paintingWidth=60;
 
+var doorLocked = false; //after checkColides = true, when a red door is put on a wall
+
+/***
+ ** CONTAINER
+ ******
+ ****
+ **/
 DThreeSpaces.Container = function(name){
 
     var name = name;
@@ -71,13 +82,16 @@ DThreeSpaces.Container = function(name){
                 json += grids[i].toJson().concat(',');
             json = json.slice(0, json.lastIndexOf(',')).concat(']');
         }
-        //return JSON.stringify(json.concat("}"));
         return json.concat('}');
     }
 }
 
 
-
+/***
+ ** GRID
+ ******
+ ****
+ **/
 DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
     var widthGrid = widthGrid;
@@ -90,12 +104,14 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     var walls = [];
     var objects = [];
     var paintings = [];
+    var doors = [];
 
     var firstClick = true;
-    var firstMouseOver = true;
     var tempPositions = [];
 
-    var widthPainting=60;
+    var firstClickX;
+    var firstClickY;
+    var onWall=false;
 
 	/*
     * Set with and heigh of the SVG canvas
@@ -202,10 +218,10 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
             firstClick=false;
     }
 
-    var firstClickX;
-    var firstClickY;
-    var onWall=false;
-
+    /**
+     * check if a wall is not too short
+     * @return {bool}    true if distance is too short
+     */
     function checkDistanceIsBad(x1,y1,x2,y2){
         var res=false;
         var distance = getDistance(x1, y1, x2, y2);
@@ -216,12 +232,14 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
     /**
      * create a wall with all events linked
+     * in draw():
      *     -mousemove : checkBounds function, used to link others walls easily.
      *     -dblclick : used to remove it
      *     -drag : used to drag it on grid and update positions
      * add it in walls table 
-     * @param {float} x mouse position
-     * @param {float} y mouse position
+     * @param {float} x mouse position, second click
+     * @param {float} y mouse position, second click
+     * tempPositions[0],tempPositions[1] used to save first click
      */
     this.addWall = function(x,y, depth, height){
 
@@ -238,59 +256,62 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     }
 
     /**
-     * add a object model with all events linked
+     * add a object model with all events linked.
+     * in draw():
      *     -dblclick : used to remove it
      *     -drag : used to drag it on grid and update positions
      */
-    this.addObject = function(x, y){
+    this.addObject = function(x, y, model){
 
-                var model = container.getCurrentObject();
-                var object = new DThreeSpaces.Object(x, y, model);
-                object.draw();
-                objects.push(object);
+        var object = new DThreeSpaces.Object(x, y, model);
+        object.draw();
+        objects.push(object);
 
-                currentGrid.cleaning();
-                container.setCurrentObject("");
-                firstMouseOver=true;
-                console.log("wall added !");
+        currentGrid.cleaning();
+        container.setCurrentObject("");
+        firstMouseOver=true;
+        console.log("wall added !");
     }
 
 
+    /**
+     * add a object model with all events linked.
+     * in draw():
+     *     -dblclick : used to remove it
+     */
     this.addPainting = function(x, y, angle, model){
-        
+  
         var painting = new DThreeSpaces.Painting(x, y, angle, model);
-        svgGrid.append("circle")
-            .attr("class", "added")
-            .attr("cx", x).attr("cy", y).attr("r", 5)
-            .attr("stroke-width", 3).style("stroke", "lightgreen")
-            .on("dblclick", function() {
-                this.remove();
-                paintings.splice(paintings.indexOf(painting), 1);
-            })
-            .call(
-                        d3.behavior.drag()
-                            .on("dragstart", function(d) {
-                                var selected = d3.select(this)
-                                    .style("stroke","blue");
-                            })
-                            .on("dragend", function(d) {
-                                var selected = d3.select(this)
-                                    .style("stroke","lightgreen"); 
-                                if(container.getCurrentItem()!="painting")
-                                    return alert("drag denied, you need to select construction mode : painting");     
-                            })
-            );
+        painting.draw();
         paintings.push(painting);
-        firstMouseOver=true;
-        container.setCurrentObject("");
+
         currentGrid.cleaning();
+        container.setCurrentObject("");
+        firstMouseOver=true;
         console.log("painting added !");      
     }
 
+    /**
+     * add a door.
+     */
+    this.addDoor = function(x1, y1, x2, y2, depth){
+        var door = new DThreeSpaces.Door(x1, y1, x2, y2, depth);
+        door.draw();
+        doors.push(door);
+
+        currentGrid.cleaning();
+        container.setCurrentObject("");
+        firstMouseOver=true;
+        doorLocked = false;
+        console.log("door added !");      
+    }
+
+    /**
+     * Not used, detecting whether there is a collision
+     */
     function checkCollides(item){
 
-
-        var res = false;
+        var res;
         svgGrid
             .selectAll("line.added")
             .each(function(){
@@ -309,10 +330,9 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                     (parseInt(item.attr("y1")) == parseInt(( m * item.attr("x1") + p)))
                     ||
                     (parseInt(item.attr("y2")) == parseInt(( m * item.attr("x2") + p)))
-                )
-                    console.log("collision");
-
-
+                ){
+                    return res = selected
+                }
             });
         return res;
     }
@@ -325,8 +345,10 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
         d3.selectAll(".current").remove();
         firstClick=true;
         firstMouseOver=true;
+        isAfterDrag = false;
         container.setCurrentObject("");
         onWall=false;
+        doorLocked=false;
     }
 
     function mouseMoveToGrid() {
@@ -366,7 +388,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                         .on("click", function(){
                             var x = d3.mouse(this)[0];
                             var y = d3.mouse(this)[1];
-                            currentGrid.addObject(x, y);
+                            currentGrid.addObject(x, y, container.getCurrentObject());
                         })
                         .on("mousemove", mouseMoveToGrid);
 
@@ -383,27 +405,27 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
             case "painting":
                 break;
 
-            case "windows":
+            case "window":
                 break;
 
-            case "doors":
-                break;
+            case "door":
 
-/*
                 if (container.getCurrentObject()=="")
+                    return;
+
+                if(doorLocked==true)
                     return;
 
                 if(firstMouseOver){
                     svgGrid
                         .append("line")
                         .style("stroke","red")
-                        .attr("stroke-width", 3)
+                        .attr("stroke-width", doorDepth)
                         .attr("class", "current")
-                        .attr("x1", x-(widthPainting/2))
+                        .attr("x1", x-(doorWidth/2))
                         .attr("y1", y)
-                        .attr("x2", x+(widthPainting/2))
+                        .attr("x2", x+(doorWidth/2))
                         .attr("y2", y)
-                        .attr("stroke-width", 10)
                         //.on("click", addPainting)
                         .on("mousemove", mouseMoveToGrid);
 
@@ -435,11 +457,25 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                         firstClickX=x;
                         firstClickY=y;
 
-                        checkCollides(select);//SO DIRTY
-
-
-                  }    */
-
+                        var res = checkCollides(select);
+                        if(res!=null){
+                            var xx = parseInt(res.attr("x1"));
+                            var yy = parseInt(res.attr("y1"));
+                            var xxx = parseInt(res.attr("x2"));
+                            var yyy = parseInt(res.attr("y2"));
+                            var resized = resize(xx, yy, xxx, yyy, doorWidth);
+                            svgGrid
+                                .selectAll("line.current")
+                                .attr("x1", resized[0])
+                                .attr("y1", resized[1])
+                                .attr("x2", resized[2])
+                                .attr("y2", resized[3])
+                                .on("click", function(){
+                                    currentGrid.addDoor(resized[0], resized[1], resized[2], resized[3], doorDepth);
+                                });
+                            doorLocked=true;
+                        }
+                }//SO DIRTY
                 break;
 
             default: console.log("currentItem not found");
@@ -457,6 +493,12 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
     }
     this.getWalls = function(){
         return walls;
+    }
+    this.getPaintings = function(){
+        return paintings;
+    }
+    this.getDoors = function(){
+        return doors;
     }
     this.getHeight = function(){
         return heightGrid;
@@ -506,11 +548,27 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
             }
             json = json.slice(0, json.lastIndexOf(',')).concat(']');
         }
+
+        if(doors.length>0){
+            json += ', "doors": [';
+            for(var i=0; i<doors.length; i++){
+                json += doors[i].toJson().concat(',');
+            }
+            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+        }
+
         return json.concat('}');
     }
     
 }
 
+
+
+/***
+ ** WALL
+ ******
+ ****
+ **/
 DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
 
     var line;
@@ -594,9 +652,8 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
                             wall.checkBounds(xMouse, yMouse, xRange, yRange);
                     })
                     .on("dblclick", function() {
-                        //this.remove();
-                        //walls.splice(walls.indexOf(wall), 1);
-                        wall.resize(150); 
+                        this.remove();
+                        walls.splice(walls.indexOf(wall), 1);
                     })
                     .call(
                         d3.behavior.drag()
@@ -655,7 +712,6 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
      * used to link walls easily.
      */
     this.checkBounds = function(xMouse, yMouse, xRange, yRange){
-
 
         var x1 = line.attr("x1");
         var x2 = line.attr("x2");
@@ -751,7 +807,11 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
     } 
 }
 
-
+/***
+ ** OBJECT
+ ******
+ ****
+ **/
 DThreeSpaces.Object = function(x, y, model) {
 
     var x = x;
@@ -818,6 +878,12 @@ DThreeSpaces.Object = function(x, y, model) {
     }
 }
 
+
+/***
+ ** PAINTING
+ ******
+ ****
+ **/
 DThreeSpaces.Painting = function(x, y, angle, model) {
 
     var x = x;
@@ -832,7 +898,7 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
         var svg = currentGrid.getSVG();
         var paintings = currentGrid.getPaintings();
 
-        svgGrid.append("circle")
+        svg.append("circle")
             .attr("class", "added")
             .attr("cx", x).attr("cy", y).attr("r", 5)
             .attr("stroke-width", 3).style("stroke", "lightgreen")
@@ -861,30 +927,122 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
     }
 }
 
+/***
+ ** DOOR
+ ******
+ ****
+ **/
+DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
 
-DThreeSpaces.Door = function(x, y, angle) {
-    var x = x;
-    var y = y;
-    var angle = angle;
-        var xy = getTruePositions(x, y);
+    var x1 = x1;
+    var y1 = y1;
+        var xy1 = getTruePositions(x1, y1);
+    var x2 = x2;
+    var y2 = y2;
+        var xy2 = getTruePositions(x2, y2);
+
+    var angle = Math.atan2(xy1[1] - xy2[1], xy1[0] - xy2[0]);
+
+    var depth = depth;
+        
+
+    this.draw = function(){
+
+        var door = this;
+        var doors = currentGrid.getDoors();
+        var svg = currentGrid.getSVG();
+
+        line = svg.append("line")
+                    .attr("class", "added")
+                    .attr("x1", x1)
+                    .attr("y1", y1)
+                    .attr("x2", x2)
+                    .attr("y2", y2)
+                    .attr("stroke-width", doorDepth)
+                    .style("stroke", "yellow")
+                    .call(
+                                    d3.behavior.drag()
+                                        .on("dragstart", function(d) {
+                                            d3.select(this)
+                                                .attr("class", "added")
+                                                .style("stroke","blue");
+                                            if(container.getCurrentItem()!="door")
+                                                return;
+                                            var selected = d3.select(this);
+                                            doors.splice(doors.indexOf(selected), 1); 
+                                            firstClickX = d3.mouse(this)[0];
+                                            firstClickY = d3.mouse(this)[1];
+
+                                        })
+                                        .on("drag", function(d) {
+                                            isAfterDrag = true;
+                                            if(container.getCurrentItem()!="door")
+                                                return;
+                                            var select = d3.select(this);
+
+                                            var x1 = select.attr("x1");
+                                            var x2 = select.attr("x2");
+                                            var y1 = select.attr("y1");
+                                            var y2 = select.attr("y2");
+
+                                            var x = d3.mouse(this)[0];
+                                            var y = d3.mouse(this)[1];
+
+                                            x1 -= (firstClickX-x);
+                                            x2 -= (firstClickX-x);
+                                            y1 -= (firstClickY-y);
+                                            y2 -= (firstClickY-y);
+                                            
+                                            select
+                                                .attr("x1", x1)
+                                                .attr("y1", y1)
+                                                .attr("x2", x2)
+                                                .attr("y2", y2);
+
+                                            firstClickX=x;
+                                            firstClickY=y;
+                                   
+                                        })
+                                        .on("dragend", function(d) {
+                                            var selected = d3.select(this)
+                                                .style("stroke","yellow"); 
+                                            if(container.getCurrentItem()!="door")
+                                                return alert("drag denied, you need to select construction mode : door");
+                                            doors.push(new DThreeSpaces.Door(selected.attr("x1"), selected.attr("y1"), selected.attr("x2"),selected.attr("y2"), doorDepth));
+                                        })
+                            );
+    }
 
     this.toJson = function() {
-        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","angle":"'+angle+'"}';
+        return '{"x1":"'+xy1[0]+'","y1":"'+xy1[1]+'","x2":"'+xy2[0]+'","y2":"'+xy2[1]+'","angle":"'+angle+'","depth":"'+depth+'"}';
     }
 }
 
+/***
+ ** WINDOW
+ ******
+ ****
+ **/
 DThreeSpaces.Window = function(x, y, angle) {
     var x = x;
     var y = y;
     var angle = angle;
         var xy = getTruePositions(x, y);
 
+    this.draw = function(){
+
+    }
+
     this.toJson = function() {
         return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","angle":"'+angle+'"}';
     }
 }
 
 
+
+/***
+ ** TOOLS
+ ******/
 function getTruePositions(x, y){
         var x = x;
         var y = y;
@@ -894,8 +1052,43 @@ function getTruePositions(x, y){
         return truePositions;
 
 }
-
 function getDistance(x1, y1, x2, y2){
      var distance = Math.sqrt(Math.pow((x2 - x1),2)+Math.pow((y2 - y1),2)); 
      return distance;
 }
+
+function resize(x1, y1, x2, y2, newDistance){
+
+        var res = [];
+        //var oldDistance = getDistance(x1, y1, x2, y2);
+        //var sub = Math.abs(distance - newDistance);
+
+        var m = (y2 - y1) / (x2 - x1);
+        var p = y1 - (m * x1);
+        //var y = m * x1 + p;
+      
+        var midX = (x1 + x2)/2;
+        var midY = (y1 + y2)/2;
+        console.log("midX="+midX);
+        console.log("midY="+midY);
+
+        var testX = midX;
+        var testY = midY;
+
+        var distance = 0;
+        var i = 0;
+        while(distance < newDistance){
+            console.log("distance="+distance);
+            testX = (testX + i);
+            testY = m * testX + p;
+            distance = getDistance(midX, midY, testX, testY);
+            console.log("distance="+distance);
+            i++;
+        }
+        res.push(midX);
+        res.push(midY);
+        res.push(testX);
+        res.push(testY);
+        
+        return res;
+} 
