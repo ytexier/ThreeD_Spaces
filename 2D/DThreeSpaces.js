@@ -16,6 +16,7 @@ var firstMouseOver = true;
 var doorWidth=30;
 var doorDepth=10;
 var paintingWidth=60;
+var lightHeight=80;
 
 var doorLocked = false; //after checkColides = true, when a red door is put on a wall
 
@@ -108,6 +109,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
     var objects = [];
     var paintings = [];
     var doors = [];
+    var lights = [];
 
     var firstClick = true;
     var tempPositions = [];
@@ -276,6 +278,22 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
         console.log("wall added !");
     }
 
+     /**
+     * add a light
+     * in draw():
+     */
+    this.addLight = function(x, y){
+
+        var light = new DThreeSpaces.Light(x, y);
+        light.draw();
+        lights.push(light);
+
+        currentGrid.cleaning();
+        container.setCurrentObject("");
+        firstMouseOver=true;
+        console.log("light added !");
+    }
+
 
     /**
      * add a object model with all events linked.
@@ -411,6 +429,33 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
             case "window":
                 break;
 
+            case "light":
+
+              if (container.getCurrentObject()=="")
+                    return;
+
+                if(firstMouseOver){
+                    svgGrid
+                        .append("circle")
+                        .attr("class", "current")
+                        .attr("cx", x).attr("cy", y).attr("r", objectWidth/2)
+                        .attr("stroke-width", 3).style("stroke", "red")
+                        .on("click", function(){
+                            var x = d3.mouse(this)[0];
+                            var y = d3.mouse(this)[1];
+                            currentGrid.addLight(x, y);
+                        })
+                        .on("mousemove", mouseMoveToGrid);
+
+                    firstMouseOver = false;
+                }else{
+                    svgGrid
+                        .selectAll("circle.current")
+                        .attr("cx", x)
+                        .attr("cy", y);
+                }
+                break;
+
             case "door":
 
                 if (container.getCurrentObject()=="")
@@ -500,6 +545,9 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
     this.getPaintings = function(){
         return paintings;
     }
+    this.getLights = function(){
+        return lights;
+    }
     this.getDoors = function(){
         return doors;
     }
@@ -541,6 +589,15 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
         if(objects.length>0){
             for(var i=0; i<objects.length; i++){
                 json += objects[i].toJson().concat(',');
+            }
+            json = json.slice(0, json.lastIndexOf(','));
+        }
+        json += ']';
+
+        json += ', "lights": [';
+        if(lights.length>0){
+            for(var i=0; i<lights.length; i++){
+                json += lights[i].toJson().concat(',');
             }
             json = json.slice(0, json.lastIndexOf(','));
         }
@@ -1072,6 +1129,76 @@ DThreeSpaces.Window = function(x, y, angle) {
 
     this.toJson = function() {
         return '{"posX":'+parseInt(xy[0])+',"posZ":'+parseInt(xy[1])+',"height":'+parseInt(height)+'}';
+    }
+}
+
+/***
+ ** LIGHT
+ ******
+ ****
+ **/
+DThreeSpaces.Light = function(x, y) {
+
+    var x = x;
+    var y = y;
+        var xy = getTruePositions(x, y);
+
+    this.draw = function(){
+
+        var light = this;
+        var svg = currentGrid.getSVG();
+        var lights = currentGrid.getLights();
+
+                svg
+                    .append("circle")
+                    .attr("cx", x).attr("cy", y).attr("r", objectWidth/2)
+                    .attr("stroke-width", 3)
+                    .style("stroke", "yellow")
+                    .attr("class", "added")
+                    .attr("x", function(){       
+                        var xMouse = d3.mouse(this)[0]-objectWidth/2;
+                        return xMouse;
+                    })
+                    .attr("y", function(){       
+                        var xMouse = d3.mouse(this)[1]-objectHeight/2;
+                        return xMouse;
+                    })
+                    .attr("width", objectWidth)
+                    .attr("height", objectHeight)
+                    .on("dblclick", function() {
+                        this.remove();
+                        lights.splice(lights.indexOf(light), 1);
+                    })
+                    .call(
+                        d3.behavior.drag()
+                            .on("dragstart", function(d) {
+                                var selected = d3.select(this)
+                                    .style("stroke","blue");
+                                if(container.getCurrentItem()!="light")
+                                    return;
+                                lights.splice(lights.indexOf(selected), 1); 
+                            })
+                            .on("drag", function(d) {
+                                isAfterDrag = true;
+                                if(container.getCurrentItem()!="light")
+                                    return;                                
+                                var selected = d3.select(this)
+                                    .attr("cx", d3.mouse(this)[0])
+                                    .attr("cy", d3.mouse(this)[1]);
+
+                             })
+                            .on("dragend", function(d) {
+                                var selected = d3.select(this)
+                                    .style("stroke","yellow"); 
+                                if(container.getCurrentItem()!="light")
+                                    return alert("drag denied, you need to select construction mode : light");               
+                                lights.push(new DThreeSpaces.Light(selected.attr("cx"), selected.attr("cy")));     
+                            })
+                    );
+    }
+
+    this.toJson = function() {
+        return '{"posX":'+parseInt(xy[0])+',"posZ":'+parseInt(xy[1])+',"height":'+lightHeight+'}';
     }
 }
 
