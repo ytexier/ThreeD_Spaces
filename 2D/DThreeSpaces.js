@@ -17,6 +17,7 @@ var doorWidth=30;
 var doorDepth=10;
 var paintingWidth=60;
 var lightHeight=80;
+var doorHeight=70;
 
 var doorLocked = false; //after checkColides = true, when a red door is put on a wall
 
@@ -315,10 +316,10 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
     /**
      * add a door.
      */
-    this.addDoor = function(x1, y1, x2, y2, depth){
-        var door = new DThreeSpaces.Door(x1, y1, x2, y2, depth);
+    this.addDoor = function(x1, y1, x2, y2, depth, wall){
+        var door = new DThreeSpaces.Door(x1, y1, x2, y2, depth, wall);
         door.draw();
-        doors.push(door);
+        wall.addDoor(door);
 
         currentGrid.cleaning();
         container.setCurrentObject("");
@@ -505,12 +506,12 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
                         firstClickX=x;
                         firstClickY=y;
 
-                        var res = currentGrid.checkCollides(select);
-                        if(res!=null){
-                            var xx = parseInt(res.attr("x1"));
-                            var yy = parseInt(res.attr("y1"));
-                            var xxx = parseInt(res.attr("x2"));
-                            var yyy = parseInt(res.attr("y2"));
+                        var wall = currentGrid.checkCollides(select);
+                        if(wall!=null){
+                            var xx = parseInt(wall.attr("x1"));
+                            var yy = parseInt(wall.attr("y1"));
+                            var xxx = parseInt(wall.attr("x2"));
+                            var yyy = parseInt(wall.attr("y2"));
                             var resized = resize(xx, yy, xxx, yyy, doorWidth);
                             svgGrid
                                 .selectAll("line.current")
@@ -519,7 +520,13 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
                                 .attr("x2", resized[2])
                                 .attr("y2", resized[3])
                                 .on("click", function(){
-                                    currentGrid.addDoor(resized[0], resized[1], resized[2], resized[3], doorDepth);
+                                    var walls = currentGrid.getWalls();
+                                    var indexFound = 0;
+                                    for(var i=0; i<walls.length; i++){
+                                        if(walls[i].isEqual(wall))
+                                            indexFound = i;
+                                      }
+                                    currentGrid.addDoor(resized[0], resized[1], resized[2], resized[3], doorDepth, walls[indexFound]);
                                 });
                             doorLocked=true;
                         }
@@ -649,6 +656,19 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, height) {
     var depth = depth;
     var height = height;
     var width = getDistance(x1, y1, x2, y2);
+
+    this.isEqual = function(wall){
+        if( line.attr("x1")==wall.attr("x1")
+            &&
+            line.attr("x2")==wall.attr("x2")
+            &&
+            line.attr("y1")==wall.attr("y1")
+            &&
+            line.attr("y2")==wall.attr("y2")
+        )
+            return true;
+        return false;
+    }
 
     this.getHeight = function(){
         return height;
@@ -794,6 +814,9 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, height) {
    
     }
 
+    this.addDoor = function(door){
+        doors.push(door);
+    }
     /**
      * used to link walls easily.
      */
@@ -1020,8 +1043,8 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
  ******
  ****
  **/
-DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
-
+DThreeSpaces.Door = function(x1, y1, x2, y2, depth, wall) {
+    var wall = wall;
     var x1 = x1;
     var y1 = y1;
         var xy1 = getTruePositions(x1, y1);
@@ -1032,6 +1055,9 @@ DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
     var angle = Math.atan2(xy1[1] - xy2[1], xy1[0] - xy2[0]);
 
     var depth = depth;
+
+    var posX = (x1 + x2)/2;
+    var posY = (y1 + y2)/2;;
         
 
     this.draw = function(){
@@ -1106,7 +1132,7 @@ DThreeSpaces.Door = function(x1, y1, x2, y2, depth) {
     }
 
     this.toJson = function() {
-        return '{"x1":'+parseInt(xy1[0])+',"y1":'+parseInt(xy1[1])+',"x2":'+parseInt(xy2[0])+',"y2":'+xy2[1]+',"angle":'+angle+',"depth":'+depth+'}';
+        return '{"width":'+doorWidth+',"height":'+doorHeight+',"posX":'+parseInt(posX)+',"posZ":'+parseInt(posY)+'}';
     }
 }
 

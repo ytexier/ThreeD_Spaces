@@ -71,12 +71,11 @@ ThreeDSpaces.Floor = function(data) {
 			paintings.push(new ThreeDSpaces.Painting(rawPaintings[i], r));
 		}
 
-		/*
 		for(var i = 0; i < rawLights.length; i++) {
 			console.log("nb lights " + rawLights.length);
 			lights.push(new ThreeDSpaces.Light(rawLights[i], r));
 		} 
-		*/
+		
 		this.generateGround();
 	}
 
@@ -186,7 +185,7 @@ ThreeDSpaces.Wall = function (data, r) {
 
 		rawObject = basic_wall_mesh;
 
-		this.generate_doors(rawDoors);
+		//this.generate_doors(rawDoors);
 		this.generate_windows(rawWindows);
 
 		var wall_mesh = new Physijs.BoxMesh(currentGeometry, wall_material, 0);
@@ -205,7 +204,12 @@ ThreeDSpaces.Wall = function (data, r) {
 	 * @return {[type]}       [description]
 	 */
 	this.generate_doors = function(doors) {
+
+		console.log(doors);
+
 		for(var i = 0; i < rawDoors.length; i++) {
+
+			console.log(rawDoors[i]);
 			
 			door_geometry 
 				= new THREE.CubeGeometry(rawDoors[i].width, rawDoors[i].height, rawObject.position.z);
@@ -265,7 +269,7 @@ ThreeDSpaces.Wall = function (data, r) {
 
 
 	this.addToScene = function(scene) {
-		scene.add(physiObject);
+		scene.add(rawObject);
 	}
 
 	this._object = function() {
