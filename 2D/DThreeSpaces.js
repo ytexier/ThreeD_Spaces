@@ -972,6 +972,7 @@ DThreeSpaces.Object = function(x, y, model) {
                     .on("dblclick", function() {
                         this.remove();
                         objects.splice(objects.indexOf(object), 1);
+                        d3.select(label).node().remove();
                     })
                     .call(
                         d3.behavior.drag()
