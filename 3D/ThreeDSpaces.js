@@ -411,7 +411,7 @@ ThreeDSpaces.Light =  function(data, r) {
         var shape = THREE.SceneUtils.createMultiMaterialObject(
         sphereGeometry, [ darkMaterial, wireframeMaterial ] );
         shape.position = object.position;
-        scene.add(shape);
+        //scene.add(shape);
 		scene.add(object);
 	}
 
