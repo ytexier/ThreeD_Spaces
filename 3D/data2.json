@@ -1,0 +1,72 @@
+{
+	"name":"Museum Test",
+	 "floors": [
+	 	{
+	 		"r":50,
+	 		"width":700,
+	 		"height":700,
+	 		"depth":2,
+	 		"texture":"assets/textures/floor/classic_wood.jpg", 
+	 		"walls": [
+	 			{
+		 			"width":557,
+		 			"heigth":100,
+		 			"depth":8,
+		 			"posX": 1,
+		 			"posZ":-288,
+		 			"angle":-3.14,
+		 			"texture":"assets/textures/floor/dark_wood.jpg", 
+		 			"doors": [], 
+		 			"windows": []
+	 			},
+	 			{
+	 				"width":543,
+	 				"heigth":100,
+	 				"depth":8,
+	 				"posX":284,
+	 				"posZ":-15,
+	 				"angle":-1.53,
+	 				"texture":"assets/textures/floor/dark_wood.jpg", 
+	 				"doors": [], 
+	 				"windows": []
+	 			},
+	 			{
+	 				"width":431,
+	 				"heigth":100,
+	 				"depth":8,
+	 				"posX":5,
+	 				"posZ":242,
+	 				"angle":0.06,
+	 				"texture":"assets/textures/floor/dark_wood.jpg", 
+	 				"doors": [], 
+	 				"windows": []
+	 			},
+	 			{
+	 				"width":527,
+	 				"heigth":100,
+	 				"depth":8,
+	 				"posX":-209,
+	 				"posZ":-30,
+	 				"angle":1.37,
+	 				"texture":"assets/textures/floor/dark_wood.jpg", 
+	 				"doors": [], 
+	 				"windows": []
+	 			}
+	 		], 
+	 		"objects": [],
+	 		"paintings": [],
+	 		"lights": [
+				{
+					"posX": 10,
+					"posZ": 50,
+					"height": 30
+				},
+				{
+					"posX": 10,
+					"posZ": 150,
+					"height": 50
+				}
+			]
+	 	}
+	]
+} 

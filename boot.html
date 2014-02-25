@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -81,11 +80,13 @@
             <input id="new_floor_width" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
             <span class="input-group-addon">Depth</span>
             <input id="new_floor_depth" type="text" class="form-control" placeholder="700" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            <!--
             <span class="input-group-addon">Height</span>
             <input id="new_floor_height" type="text" class="form-control" placeholder="50" data-toggle="popover" data-placement="top" data-content="Missing value.">
+            -->
           </div>
           <a class="btn btn-info" href="#" onClick="new_floor_form()">Validate</a>
-          <a class="btn btn-default" href="#" onClick="addGrid(700, 700, 50)">Default</a>
+          <a class="btn btn-default" href="#" onClick="addGrid(700, 700)">Default</a>
       </div>
 
       <div class="alert alert block alert-danger fade in" id="delete_floor_alert">
@@ -126,8 +127,16 @@
         <i class="icon-dashboard"></i> Wall
       </a>
 
-      <a href="#" class="list-group-item" value="light" onClick="selectItem('light')">
+      <a href="#" id="light_list_item" class="list-group-item" value="light" onClick="selectItem('light')">
         <i class="icon-dashboard"></i> Light
+      </a>
+
+      <a href="#" id="door_list_item" class="list-group-item" value="door" onClick="selectItem('door')">
+        <i class="icon-dashboard"></i> Door
+      </a>
+
+      <a href="#" class="list-group-item" value="light" onClick="selectItem('window')">
+        <i class="icon-dashboard"></i> Window
       </a>
 
       <a href="#" class="list-group-item" value="object" id="object" data-parent="#sidebar" onClick="selectItem('object')">
@@ -136,12 +145,13 @@
 
       <div id="objects_collapse" class="list-group subitem collapse"></div>
 
-      <a href="#" class="list-group-item" value="painting" id="painting" data-parent="#sidebar" onClick="selectItem('object')">
+      <a href="#" class="list-group-item" value="painting" id="painting" data-parent="#sidebar" onClick="selectItem('painting')">
         <i class="icon-group"></i> Paintings
       </a>
 
       <div id="paintings_collapse" class="list-group subitem collapse"></div> 
 
+      <!--
       <a href="#articles" class="list-group-item"  data-parent="#sidebar">
         <i class="icon-file-text"></i> Lights
         <span class="badge bg_danger">0</span>
@@ -157,9 +167,9 @@
         <a href="#" class="list-group-item">
           <i class="icon-caret-right"></i> Create Article
         </a>
-
+      
       </div>
-
+      -->
     </div>
   </div>
 
@@ -309,6 +319,7 @@
           }, 2000);
           valid_form = false;
         }
+        /*
         if(new_height === "") {
           $("#new_floor_height").popover("show");
           setTimeout(function () {
@@ -316,9 +327,9 @@
           }, 2000);
           valid_form = false;
         }
-        
+        */
         if(valid_form) {
-          addGrid(new_width, new_depth, new_height);
+          addGrid(new_width, new_depth);
         }
       }
 
@@ -452,6 +463,21 @@
               class: "badge bg_danger"
             });
           });
+
+      $(document).ready(function() {
+        $("#door_list_item").popover({
+            placement: 'right',
+            html: 'true',
+            title : '<span class="text-info"><strong>New Door !</strong></span>',
+            content : '<button type="button" class="btn btn-info" onClick="selectObject(\'door\')">Add</button>'
+        });
+        $("#light_list_item").popover({
+            placement: 'right',
+            html: 'true',
+            title : '<span class="text-info"><strong>New SpotLight !</strong></span>',
+            content : '<button type="button" class="btn btn-info" onClick="selectObject(\'light\')">Add</button>'
+        });
+      });
 
       $(document).keyup(function(e) {
         //cleaning all currentLine, currentRect, currentCircle with keyup escap
