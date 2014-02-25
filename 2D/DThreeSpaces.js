@@ -4,7 +4,7 @@ var WIDTH_MIN_WALL = 15;
 
 var currentGrid ;
 
-var depthWall = 20;
+var depthWall = 10;
 var heightWall = 100;
 
 var objectWidth = 40;
@@ -624,7 +624,7 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture
  ******
  ****
  **/
-DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
+DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, height) {
 
     var doors = [];
     var windows = [];
@@ -647,11 +647,11 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
     var angle = Math.atan2(xy1[1] - xy2[1], xy1[0] - xy2[0]);
 
     var depth = depth;
-    var heigth = heigth;
+    var height = height;
     var width = getDistance(x1, y1, x2, y2);
 
-    this.getHeigth = function(){
-        return heigth;
+    this.getHeight = function(){
+        return height;
     }
     this.getDepth = function(){
         return depth;
@@ -662,7 +662,7 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
 
     this.toJson = function() {
 
-        var json = '{"width":'+parseInt(width)+',"heigth":'+parseInt(heigth)+',"depth":'+parseInt(depth)+',"posX":'+parseInt(posXY[0])+',"posZ":'+parseInt(posXY[1])+',"angle":'+parseFloat(angle).toFixed(2)+',"texture":"'+texture+'"';
+        var json = '{"width":'+parseInt(width)+',"height":'+parseInt(height)+',"depth":'+parseInt(depth*2)+',"posX":'+parseInt(posXY[0])+',"posZ":'+parseInt(posXY[1])+',"angle":'+parseFloat(angle).toFixed(2)+',"texture":"'+texture+'"';
     
         json += ', "doors": [';
         if(doors.length>0){
@@ -788,7 +788,7 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
                                     .style("stroke","green"); 
                                 if(container.getCurrentItem()!="wall")
                                     return alert("drag denied, you need to select construction mode : wall");
-                                walls.push(new DThreeSpaces.Wall(selected.attr("x1"), selected.attr("y1"), selected.attr("x2"), selected.attr("y2"), wall.getDepth(), wall.getHeigth()));
+                                walls.push(new DThreeSpaces.Wall(selected.attr("x1"), selected.attr("y1"), selected.attr("x2"), selected.attr("y2"), wall.getDepth(), wall.getHeight()));
                             })
                     );
    
