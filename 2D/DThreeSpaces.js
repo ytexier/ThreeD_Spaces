@@ -14,7 +14,7 @@ var isAfterDrag = false;
 var firstMouseOver = true;
 
 var doorWidth=30;
-var doorDepth=10;
+var doorDepth=15;
 var paintingWidth=60;
 var lightHeight=80;
 var doorHeight=70;
