@@ -271,9 +271,7 @@ function wp2json(jsonWP)
 		//document.write(json);
 		
 		//Ici on store
-		// $("#monJson").text(json);
-		localStorage['maCle'] = json;
-		$("#enter3D").show();
+		$("#monJson").text(json);
 	});
 
 	}
@@ -531,7 +529,7 @@ function wp2json(jsonWP)
 		json += "]";
 		
 		json += "}";
-
+		alert("Dans la fonction "+json);
 		//document.write(json);
 		return json;
 		}

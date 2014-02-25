@@ -2,8 +2,6 @@ $(function() {
 var code = $( "#code" ),
 allFields = $( [] ).add( code ),
 tips = $( ".validateTips" );
-localStorage['maCle']="";
-
 function updateTips( t ) {
 tips
 .text( t )
@@ -61,6 +59,7 @@ allFields.val( "" ).removeClass( "ui-state-error" );
 
 function initiateMusee(){
 
+	//alert("http://www.kozikaza.com/wanaplan/684861.json");
 	//C'est ici que l'on récupère l'adresse du fichier JSon
 	var param ="adresse="+"http://www.kozikaza.com/wanaplan/684861.json";
 	envoyerRequete( "recuperationJson.php",param , "wp2json", true);
@@ -68,10 +67,6 @@ function initiateMusee(){
 
 function initiateNouveau(){
 	$( "#dialog-form" ).dialog( "open" );
-}
-
-function initiateEnter3D(){
-	alert(localStorage['maCle']);
 }
 
 
