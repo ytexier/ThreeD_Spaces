@@ -38,8 +38,8 @@ DThreeSpaces.Container = function(name){
     this.setHiddenGrid = function(indexGrid){
         grids[indexGrid].setHidden();
     }
-    this.addGrid = function(width, height, depth, r){
-        grids.push(new DThreeSpaces.Grid(this, width, height, depth, r));
+    this.addGrid = function(width, height, depth, r, texture){
+        grids.push(new DThreeSpaces.Grid(this, width, height, depth, r, texture));
     }
     this.getGrids = function(){
         return grids;
@@ -76,12 +76,15 @@ DThreeSpaces.Container = function(name){
 
     this.toJson = function(){
         var json = '{"name":"'+name+'"';
+
+        json += ', "floors": [';
         if(grids.length>0){
-            json += ', "floors": [';
             for(var i=0; i<grids.length; i++)
                 json += grids[i].toJson().concat(',');
-            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+            json = json.slice(0, json.lastIndexOf(','));
         }
+        json += ']';
+
         return json.concat('}');
     }
 }
@@ -92,7 +95,7 @@ DThreeSpaces.Container = function(name){
  ******
  ****
  **/
-DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
+DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r, texture) {
 
     var widthGrid = widthGrid;
     var heightGrid = heightGrid;
@@ -423,9 +426,9 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
                         .attr("stroke-width", doorDepth)
                         .attr("class", "current")
                         .attr("x1", x-(doorWidth/2))
-                        .attr("y1", y)
+                        .attr("y1", y-10)
                         .attr("x2", x+(doorWidth/2))
-                        .attr("y2", y)
+                        .attr("y2", y-10)
                         //.on("click", addPainting)
                         .on("mousemove", mouseMoveToGrid);
 
@@ -523,39 +526,34 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
 
     this.toJson = function() {
 
-        var json = '{"r":"'+r+'","width":"'+widthGrid+'","height":"'+heightGrid+'","depth":"'+depth+'"';
+        var json = '{"r":"'+r+'","width":"'+widthGrid+'","height":"'+heightGrid+'","depth":"'+depth+'","texture":"'+texture+'"';
 
+        json += ', "walls": [';
         if(walls.length>0){
-            json += ', "walls": [';
             for(var i=0; i<walls.length; i++){
                 json += walls[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+            json = json.slice(0, json.lastIndexOf(','));
         }
+        json += ']';
 
+        json += ', "objects": [';
         if(objects.length>0){
-            json += ', "objects": [';
             for(var i=0; i<objects.length; i++){
                 json += objects[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+            json = json.slice(0, json.lastIndexOf(','));
         }
+        json += ']';
 
+        json += ', "paintings": [';
         if(paintings.length>0){
-            json += ', "paintings": [';
             for(var i=0; i<paintings.length; i++){
                 json += paintings[i].toJson().concat(',');
             }
-            json = json.slice(0, json.lastIndexOf(',')).concat(']');
+            json = json.slice(0, json.lastIndexOf(','));
         }
-
-        if(doors.length>0){
-            json += ', "doors": [';
-            for(var i=0; i<doors.length; i++){
-                json += doors[i].toJson().concat(',');
-            }
-            json = json.slice(0, json.lastIndexOf(',')).concat(']');
-        }
+        json += ']';
 
         return json.concat('}');
     }
@@ -571,7 +569,11 @@ DThreeSpaces.Grid = function(container, widthGrid, heightGrid, depth, r) {
  **/
 DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
 
+    var doors = [];
+    var windows = [];
+    
     var line;
+    var texture = 'assets/textures/floor/dark_wood.jpg';
 
     var x1 = x1;
     var y1 = y1;
@@ -581,10 +583,15 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
     var y2 = y2;
         var xy2 = getTruePositions(x2, y2);
 
+    var posX = Math.abs((x1 + x2)/2);
+    var posY = Math.abs((y1 + y2)/2);
+        var posXY = getTruePositions(posX, posY);
+
     var angle = Math.atan2(xy1[1] - xy2[1], xy1[0] - xy2[0]);
 
     var depth = depth;
     var heigth = heigth;
+    var width = getDistance(x1, y1, x2, y2);
 
     this.getHeigth = function(){
         return heigth;
@@ -597,7 +604,28 @@ DThreeSpaces.Wall = function(x1, y1, x2, y2, depth, heigth) {
     }
 
     this.toJson = function() {
-        return '{"x1":"'+xy1[0]+'","y1":"'+xy1[1]+'","x2":"'+xy2[0]+'","y2":"'+xy2[1]+'","angle":"'+angle+'","depth":"'+depth+'"}';
+
+        var json = '{"width":"'+width+'","heigth":"'+heigth+'","depth":"'+depth+'","posX":"'+posXY[0]+'","posZ":"'+posXY[1]+'","angle":"'+angle+'","texture":"'+texture+'"';
+    
+        json += ', "doors": [';
+        if(doors.length>0){
+            for(var i=0; i<doors.length; i++){
+                json += doors[i].toJson().concat(',');
+            }
+            json = json.slice(0, json.lastIndexOf(','));
+        }
+        json += ']';
+
+        json += ', "windows": [';
+        if(windows.length>0){
+            for(var i=0; i<windows.length; i++){
+                json += windows[i].toJson().concat(',');
+            }
+            json = json.slice(0, json.lastIndexOf(','));
+        }
+        json += ']';
+
+        return json.concat('}');
     }
 
     this.draw = function(){
@@ -874,7 +902,7 @@ DThreeSpaces.Object = function(x, y, model) {
     }
 
     this.toJson = function() {
-        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","model":"'+model+'"}';
+        return '{"posX":"'+xy[0]+'","posZ":"'+xy[1]+'","model":"'+model+'"}';
     }
 }
 
@@ -891,6 +919,8 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
     var angle = angle;
     var model = model;
         var xy = getTruePositions(x, y);
+
+    var posY = 100; // i've no time
 
     this.draw = function(){
 
@@ -923,7 +953,7 @@ DThreeSpaces.Painting = function(x, y, angle, model) {
 
 
     this.toJson = function() {
-        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","angle":"'+angle+'","model":"'+model+'"}';
+        return '{"posX":"'+xy[0]+'","posY":"'+posY+'","posZ":"'+xy[1]+'","angle":"'+angle+'","model":"'+model+'"}';
     }
 }
 
@@ -1033,12 +1063,14 @@ DThreeSpaces.Window = function(x, y, angle) {
     var angle = angle;
         var xy = getTruePositions(x, y);
 
+    var height = 50;// i've no time :)
+
     this.draw = function(){
 
     }
 
     this.toJson = function() {
-        return '{"x":"'+xy[0]+'","z":"'+xy[1]+'","angle":"'+angle+'"}';
+        return '{"posX":"'+xy[0]+'","posZ":"'+xy[1]+'","height":"'+height+'"}';
     }
 }
 
