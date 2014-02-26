@@ -340,6 +340,8 @@ ThreeDSpaces.Painting =  function(data, r) {
 	var posZ = data.posZ;
 	var angle = data.angle;
 
+	console.log(posY);
+
 	var model = data.model;
 	var object;
 
@@ -355,9 +357,9 @@ ThreeDSpaces.Painting =  function(data, r) {
             object.scale.x = object.scale.y = object.scale.z =  1;
             object.updateMatrix();
             object.rotation.x = -Math.PI / 2;
-            object.position.y = r+posY;
+            object.position.y = r+30;
             object.position.z = posZ;
-            object.position.x = posX;
+            object.position.x = posX-10.1;
             object.receiveShadow = true;
             object.castShadow = true;
             scene.add(object);
